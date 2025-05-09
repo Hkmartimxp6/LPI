@@ -1625,9 +1625,21 @@ input[type="radio"] .styled:checked+label::after {
      text-align: center;
 }
 .banner-main {
-     position: relative;
-     
+    position: relative;
+    width: 100%;
+    height: 100vh; /* Ensure the banner takes up full screen height */
+    background: url('images/banner.png') no-repeat center center;
+    background-size: cover; /* This will make the image cover the entire area */
 }
+
+
+/* Additional responsiveness adjustments */
+@media screen and (max-width: 768px) {
+    .banner-main {
+        height: 70vh; /* For smaller screens, you may want to reduce the height */
+    }
+}
+
 .banner-main .text-bg h1 {
      font-size: 90px;
      line-height: 108px;
