@@ -1617,7 +1617,7 @@ input[type="radio"] .styled:checked+label::after {
 .text-bg {
      position: absolute;
      right: 0;
-     top: 50%;
+     top: 30%;
      transform: translateY(-50%);
      bottom: auto;
      padding: 0;
@@ -1627,7 +1627,7 @@ input[type="radio"] .styled:checked+label::after {
 .banner-main {
     position: relative;
     width: 100%;
-    height: 100vh; /* Ensure the banner takes up full screen height */
+    height: 85vh; /* Ensure the banner takes up full screen height */
     background: url('images/banner.png') no-repeat center center;
     background-size: cover; /* This will make the image cover the entire area */
 }
@@ -1640,7 +1640,7 @@ input[type="radio"] .styled:checked+label::after {
     }
 }
 
-.banner-main .text-bg h1 {
+.banner-main .text-bg h1 { /* viaja da melhor maneira */
      font-size: 90px;
      line-height: 108px;
      text-transform: uppercase;
@@ -1648,13 +1648,14 @@ input[type="radio"] .styled:checked+label::after {
      font-weight: bold;
      padding-bottom: 35px;
      padding-top: 25px;
+     margin-top: 8%;
 }
 .white {
      color: #fff;
 }
 .main-form h3 {
      float: left;
-     margin-top: -82px;
+     margin-top: -72px;
      background: #fff;
      padding: 10px 28px;
      margin-left: -35px;
@@ -1672,9 +1673,10 @@ input[type="radio"] .styled:checked+label::after {
      width: 100%;
      height: 40px;
 }
-.main-form {
+.main-form {/* cena com destino e origem */
      background: #ffffffe8;
      padding: 35px 35px;
+     margin-top: 100px;
 }
 .form-control {
      border: #c2c4c4 solid 1px;
