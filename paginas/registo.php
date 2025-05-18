@@ -44,11 +44,11 @@
                                     <div class="text-center">
                                         <img src="logo.png" class="img-fluid" style="width: 185px;" alt="logo">
                                     </div>
-                                    <form action="index.php" method = "post">
+                                    <form action="criar_registo.php" method = "post">
                                         <label class="form-label" for="form2Example11">Utilizador</label>
                                         <div data-mdb-input-init class="form-outline mb-4">
                                             <input type="text" id="form2Example11" class="form-control"
-                                                placeholder="O seu nome de utilizador" name = "utilizador"/>
+                                                placeholder="O seu nome de utilizador" name = "utilizador_registo"/>
                                         </div>
 
                                         <label class="form-label" for="form2Example11">Email</label>
@@ -60,7 +60,7 @@
                                         <label class="form-label" for="form2Example22">Password</label>
                                         <div data-mdb-input-init class="form-outline mb-4">
                                             <input type="password" id="form2Example22" class="form-control"
-                                                placeholder="A sua password" name = "password"/>
+                                                placeholder="A sua password" name = "password_registo"/>
                                         </div>
 
                                         <label class="form-label" for="form2Example22">Repita a Password</label>

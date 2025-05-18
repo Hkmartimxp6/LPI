@@ -45,21 +45,21 @@
                                     <div class="text-center">
                                         <img src="logo.png" class="img-fluid" style="width: 185px;" alt="logo">
                                     </div>
-                                    <form action="index.php" method="POST">
+                                    <form action="verifica_login.php" method="POST">
                                         <label class="form-label" for="form2Example11">Utilizador</label>
                                         <div data-mdb-input-init class="form-outline mb-4">
                                             <input type="text" id="form2Example11" class="form-control"
-                                                placeholder="O seu nome de utilizador" />
+                                                placeholder="O seu nome de utilizador" name = "utilizador"/>
                                         </div>
                                         <label class="form-label" for="form2Example22">Password</label>
                                         <div data-mdb-input-init class="form-outline mb-4">
                                             <input type="password" id="form2Example22" class="form-control"
-                                                placeholder="A sua password" />
+                                                placeholder="A sua password" name = "password" />
                                         </div>
                                         <div class="text-center pt-1 mb-5 pb-1">
                                             <button data-mdb-button-init data-mdb-ripple-init
                                                 class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3"
-                                                type="button" style="height: 40px;">
+                                                type="submit" style="height: 40px;">
                                                 Login
                                             </button>
 
@@ -68,7 +68,7 @@
                                                 <p class="mb-0 me-2">Não tens conta?</p>
                                                 <a href="registo.php" type="button"  data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary">Regista-te!</a>
                                             </div>
-                                        </form>
+                                    </form>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 d-flex align-items-center gradient-custom-2">
