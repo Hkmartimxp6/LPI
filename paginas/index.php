@@ -14,19 +14,19 @@
    <meta name="description" content="">
    <meta name="author" content="">
    <!-- bootstrap css -->
-   <link rel="stylesheet" href="css/bootstrap.min.css">
+   <link rel="stylesheet" href="bootstrap.min.css">
    <!-- style css -->
-   <link rel="stylesheet" href="css/style.css">
+   <link rel="stylesheet" href="style.css">
    <!-- Responsive-->
-   <link rel="stylesheet" href="css/responsive.css">
+   <link rel="stylesheet" href="responsive.css">
    <!-- fevicon -->
-   <link rel="icon" href="images/fevicon.png" type="image/gif" />
+   <link rel="icon" href="fevicon.png" type="image/gif" />
    <!-- Scrollbar Custom CSS -->
-   <link rel="stylesheet" href="css/jquery.mCustomScrollbar.min.css">
+   <link rel="stylesheet" href="jquery.mCustomScrollbar.min.css">
    <!-- Tweaks for older IEs-->
    <!-- owl stylesheets -->
-   <link rel="stylesheet" href="css/owl.carousel.min.css">
-   <link rel="stylesheet" href="css/owl.theme.default.min.css">
+   <link rel="stylesheet" href="owl.carousel.min.css">
+   <link rel="stylesheet" href="owl.theme.default.min.css">
    <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
@@ -36,7 +36,7 @@
 <body class="main-layout">
    <!-- loader  -->
    <div class="loader_bg">
-      <div class="loader"><img src="images/loading.gif" alt="#" /></div>
+      <div class="loader"><img src="loading.gif" alt="#" /></div>
    </div>
    <!-- end loader -->
    <!-- header -->
@@ -49,9 +49,9 @@
                   <div class="col-md-12">
                      <div class="header_information">
                         <ul>
-                           <li><img src="images/1.png" alt="#" /> Rua Bife Da Vazia</li>
-                           <li><img src="images/2.png" alt="#" /> +351 963 961 984</li>
-                           <li><img src="images/3.png" alt="#" /> felixbus@gmail.com</li>
+                           <li><img src="1.png" alt="#" /> Rua Bife Da Vazia</li>
+                           <li><img src="2.png" alt="#" /> +351 963 961 984</li>
+                           <li><img src="3.png" alt="#" /> felixbus@gmail.com</li>
                         </ul>
                      </div>
                   </div>
@@ -63,7 +63,7 @@
                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col logo_section">
                   <div class="full">
                      <div class="center-desk">
-                        <div class="logo"> <a href="index.html"><img src="images/logo.png" style="width:300px;" alt="#"></a> </div>
+                        <div class="logo"> <a href="index.html"><img src="logo.png" style="width:300px;" alt="#"></a> </div>
                      </div>
                   </div>
                </div>
@@ -90,7 +90,7 @@
    <!-- end header -->
    <section>
       <div class="banner-main">
-         <img src="images/banner.png" alt="#" />
+         <img src="banner.png" alt="#" />
          <div class="container">
             <div class="text-bg">
                <h1>Viaja da Melhor<br><strong class="white">Maneira!</strong></h1>
@@ -145,7 +145,7 @@
                   <div class="about-box">
                      <p> <span>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure thereThere are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there</span></p>
                      <div class="palne-img-area">
-                        <img src="images/plane-img.png" alt="images">
+                        <img src="plane-img.png" alt="images">
                      </div>
                   </div>
                </div>
@@ -169,7 +169,7 @@
          <div class="row">
             <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
                <div class="traveling-box">
-                  <i><img src="icon/travel-icon.png" alt="icon" /></i>
+                  <i><img src="travel-icon.png" alt="icon" /></i>
                   <h3>Different Countrys</h3>
                   <p> going to use a passage of Lorem Ipsum, you need to be </p>
                   <div class="read-more">
@@ -179,7 +179,7 @@
             </div>
             <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
                <div class="traveling-box">
-                  <i><img src="icon/travel-icon2.png" alt="icon" /></i>
+                  <i><img src="travel-icon2.png" alt="icon" /></i>
                   <h3>Mountains Tours</h3>
                   <p> going to use a passage of Lorem Ipsum, you need to be </p>
                   <div class="read-more">
@@ -189,7 +189,7 @@
             </div>
             <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
                <div class="traveling-box">
-                  <i><img src="icon/travel-icon3.png" alt="icon" /></i>
+                  <i><img src="travel-icon3.png" alt="icon" /></i>
                   <h3>Bus Tours</h3>
                   <p> going to use a passage of Lorem Ipsum, you need to be </p>
                   <div class="read-more">
@@ -199,7 +199,7 @@
             </div>
             <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
                <div class="traveling-box">
-                  <i><img src="icon/travel-icon4.png" alt="icon" /></i>
+                  <i><img src="travel-icon4.png" alt="icon" /></i>
                   <h3>Summer Rest</h3>
                   <p> going to use a passage of Lorem Ipsum, you need to be </p>
                   <div class="read-more">
@@ -225,7 +225,7 @@
       </div>
       <div class="container-fluid">
          <div class="London-img">
-            <figure><img src="images/London.jpg" alt="img" /></figure>
+            <figure><img src="London.jpg" alt="img" /></figure>
          </div>
       </div>
    </div>
@@ -246,22 +246,22 @@
                <div class="col-md-12">
                   <div class="owl-carousel owl-theme">
                      <div class="item">
-                        <img class="img-responsive" src="images/1.jpg" alt="#" />
+                        <img class="img-responsive" src="1.jpg" alt="#" />
                         <h3>Holiday Tour</h3>
                         <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in soe suffk even slightly believable. If y be sure there</p>
                      </div>
                      <div class="item">
-                        <img class="img-responsive" src="images/2.jpg" alt="#" />
+                        <img class="img-responsive" src="2.jpg" alt="#" />
                         <h3>New York</h3>
                         <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in soe suffk even slightly believable. If y be sure there</p>
                      </div>
                      <div class="item">
-                        <img class="img-responsive" src="images/3.jpg" alt="#" />
+                        <img class="img-responsive" src="3.jpg" alt="#" />
                         <h3>London</h3>
                         <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in soe suffk even slightly believable. If y be sure there</p>
                      </div>
                      <div class="item">
-                        <img class="img-responsive" src="images/2.jpg" alt="#" />
+                        <img class="img-responsive" src="2.jpg" alt="#" />
                         <h3>Holiday Tour</h3>
                         <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in soe suffk even slightly believable. If y be sure there</p>
                      </div>
@@ -301,7 +301,7 @@
          <div class="row">
             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                <div class="blog-box">
-                  <figure><img src="images/blog-image0.jpg" alt="#" />
+                  <figure><img src="blog-image0.jpg" alt="#" />
                      <span>4 Feb 2019</span>
                   </figure>
                   <div class="travel">
@@ -315,7 +315,7 @@
             </div>
             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                <div class="blog-box">
-                  <figure><img src="images/blog-image.jpg" alt="#" />
+                  <figure><img src="blog-image.jpg" alt="#" />
                      <span>10 Feb 2019</span>
                   </figure>
                   <div class="travel">
@@ -338,10 +338,10 @@
             <div class="row pdn-top-30">
                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                   <ul class="location_icon">
-                     <li> <a href="#"><img src="icon/facebook.png"></a></li>
-                     <li> <a href="#"><img src="icon/Twitter.png"></a></li>
-                     <li> <a href="#"><img src="icon/linkedin.png"></a></li>
-                     <li> <a href="#"><img src="icon/instagram.png"></a></li>
+                     <li> <a href="#"><img src="facebook.png"></a></li>
+                     <li> <a href="#"><img src="Twitter.png"></a></li>
+                     <li> <a href="#"><img src="linkedin.png"></a></li>
+                     <li> <a href="#"><img src="instagram.png"></a></li>
                   </ul>
                </div>
                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
@@ -392,16 +392,16 @@
    </footer>
    <!-- end footer -->
    <!-- Javascript files-->
-   <script src="js/jquery.min.js"></script>
-   <script src="js/popper.min.js"></script>
-   <script src="js/bootstrap.bundle.min.js"></script>
-   <script src="js/jquery-3.0.0.min.js"></script>
-   <script src="js/plugin.js"></script>
+   <script src="jquery.min.js"></script>
+   <script src="popper.min.js"></script>
+   <script src="bootstrap.bundle.min.js"></script>
+   <script src="jquery-3.0.0.min.js"></script>
+   <script src="plugin.js"></script>
    <!-- sidebar -->
-   <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
-   <script src="js/custom.js"></script>
+   <script src="jquery.mCustomScrollbar.concat.min.js"></script>
+   <script src="custom.js"></script>
    <!-- javascript -->
-   <script src="js/owl.carousel.js"></script>
+   <script src="owl.carousel.js"></script>
    <script>
       $(document).ready(function() {
          var owl = $('.owl-carousel');
