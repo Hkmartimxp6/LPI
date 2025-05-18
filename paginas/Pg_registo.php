@@ -78,7 +78,7 @@
                                         </div>
                                         <div class="d-flex align-items-center justify-content-between pb-4">
                                             <p class="mb-0 me-2">Já tens conta?</p>
-                                            <a href="login.php" type="button" data-mdb-button-init data-mdb-ripple-init
+                                            <a href="Pg_login.php" type="button" data-mdb-button-init data-mdb-ripple-init
                                                 class="btn btn-outline-primary">Faz Login!</a>
                                         </div>
                                     </form>
