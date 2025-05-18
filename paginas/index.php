@@ -94,7 +94,7 @@
          <div class="container">
             <div class="text-bg">
                <h1>Viaja da Melhor<br><strong class="white">Maneira!</strong></h1>
-               <div class="button_section"> <a class="main_bt" href="#procurar">Procurar</a> </div>
+               <div class="button_section"> <a class="main_bt" href="login.php">Faz Login!</a> </div>
                <div class="container">
                   <form class="main-form">
                      <h3 id="procurar">Encontra a tua viagem</h3>

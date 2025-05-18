@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 17, 2025 at 01:02 PM
+-- Generation Time: May 18, 2025 at 07:23 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,9 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `felixbus`
 --
-CREATE DATABASE felixbus;
-
-USE felixbus;
+CREATE DATABASE IF NOT EXISTS `felixbus` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `felixbus`;
 
 -- --------------------------------------------------------
 
@@ -30,6 +29,7 @@ USE felixbus;
 -- Table structure for table `utilizador`
 --
 
+DROP TABLE IF EXISTS `utilizador`;
 CREATE TABLE `utilizador` (
   `id_utilizador` int(100) NOT NULL,
   `password` varchar(20) NOT NULL,
