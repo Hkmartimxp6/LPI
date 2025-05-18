@@ -1,5 +1,6 @@
 <?php
 include "../basedados/basedados.h";
+include "utilizadores.php";
 
 session_start();
 
@@ -9,7 +10,7 @@ if (!isset($_POST['utilizador_registo']) || !isset($_POST['password_registo'])) 
 
 $user = $_POST["utilizador_registo"];
 $pass = $_POST["password_registo"];
-
+$tipo = CLIENTE_NAO_VALIDO;
 
 // Verificar se o utilizador já existe
 $sql_check = "SELECT * FROM utilizador WHERE nome_utilizador = '$user'";
@@ -22,7 +23,7 @@ if (mysqli_num_rows($result_check) > 0) {
 }
 
 // Inserir o novo utilizador
-$sql = "INSERT INTO utilizador (nome_utilizador, password) VALUES ('$user', '$pass')";
+$sql = "INSERT INTO utilizador (nome_utilizador, password, tipo_utilizador ) VALUES ('$user', '$pass', '$tipo')";
 if (mysqli_query($conn, $sql)) {
     $_SESSION["utilizador"] = $user;
     echo "Registo efetuado com sucesso! Redirecionando...";
