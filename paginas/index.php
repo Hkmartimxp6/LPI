@@ -90,42 +90,45 @@
    <!-- end header -->
    <section>
       <div class="banner-main">
-         <img src="banner.png" alt="#" style="width: 100%; height: 100%; object-fit: cover;"/>
-         <div class="container">
-            <div class="text-bg">
-               <h1>Viaja da Melhor<br><strong class="white">Maneira!</strong></h1>
-               <div class="button_section"> <a class="main_bt" href="login.php">Faz Login!</a> </div>
-               <div class="container">
-                  <form class="main-form">
-                     <h3 id="procurar">Encontra a tua viagem</h3>
-                     <div class="row">
-                        <div class="col-md-9">
-                           <div class="row">
-                              <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
-                                 <label>Origem</label>
-                                 <input class="form-control" placeholder="" type="text" name="">
-                              </div>
-                              <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
-                                 <label>Destino</label>
-                                 <input class="form-control" type="text" name="">
-                              </div>
+         <img src="banner.png" alt="#" style="width: 100%; height: 100%; object-fit: cover;" />
 
-                              <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
-                                 <label>Data</label>
-                                 <input class="form-control" placeholder="Any" type="date" name="Any">
-                              </div>
+         <!-- text-bg moved directly under banner-main to overlay the image -->
+         <div class="text-bg">
+            <h1>Viaja da Melhor<br><strong class="white">Maneira!</strong></h1>
+            <div class="button_section">
+               <a class="main_bt" href="login.php">Faz Login!</a>
+            </div>
+            <div class="container">
+               <div class="row justify-content-center">
+                  <div class="col-lg-12 col-md-10 col-sm-12">
+                     <form class="main-form">
+                        <h3 id="procurar">Encontra a tua viagem</h3>
+                        <div class="row">
+                           <div class="col-md-4 col-sm-6">
+                              <label>Origem</label>
+                              <input class="form-control" placeholder="" type="text" name="">
+                           </div>
+                           <div class="col-md-4 col-sm-6">
+                              <label>Destino</label>
+                              <input class="form-control" type="text" name="">
+                           </div>
+                           <div class="col-md-4 col-sm-6">
+                              <label>Data</label>
+                              <input class="form-control" placeholder="Any" type="date" name="Any">
+                           </div>
+                           <div class="col-12 text-center mt-3">
+                              <button type="submit" class="btn btn-primary" style="background-color: #EE580F; border:#EE580F">Procurar</button>
                            </div>
                         </div>
-                        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 col-12">
-                           <a href="#">search</a>
-                        </div>
-                     </div>
-                  </form>
+                     </form>
+                  </div>
                </div>
             </div>
+
          </div>
       </div>
    </section>
+
    <!-- about -->
    <div id="about" class="about">
       <div class="container">
