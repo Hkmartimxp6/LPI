@@ -29,7 +29,7 @@ USE `felixbus`;
 -- Table structure for table `utilizador`
 --
 
-DROP TABLE IF EXISTS `utilizador`;
+/*DROP TABLE IF EXISTS `utilizador`;*/
 CREATE TABLE `utilizador` (
   `id_utilizador` int(100) NOT NULL,
   `password` varchar(20) NOT NULL,
