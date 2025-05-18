@@ -9,28 +9,34 @@ if (!isset($_POST['utilizador_registo']) || !isset($_POST['password_registo'])) 
 }
 
 $user = $_POST["utilizador_registo"];
-$pass = $_POST["password_registo"];
+$pass = md5($_POST["password_registo"]);  // MD5 da password
 $tipo = CLIENTE_NAO_VALIDO;
 
 // Verificar se o utilizador já existe
-$sql_check = "SELECT * FROM utilizador WHERE nome_utilizador = '$user'";
-$result_check = mysqli_query($conn, $sql_check);
+$stmt_check = $conn->prepare("SELECT * FROM utilizador WHERE nome_utilizador = ?");
+$stmt_check->bind_param("s", $user);
+$stmt_check->execute();
+$result_check = $stmt_check->get_result();
 
-if (mysqli_num_rows($result_check) > 0) {
+if ($result_check->num_rows > 0) {
     echo "Nome de utilizador já existe. Redirecionando para o registo...";
     header("refresh:2; url=registo.php");
     exit();
 }
 
 // Inserir o novo utilizador
-$sql = "INSERT INTO utilizador (nome_utilizador, password, tipo_utilizador ) VALUES ('$user', '$pass', '$tipo')";
-if (mysqli_query($conn, $sql)) {
+$stmt_insert = $conn->prepare("INSERT INTO utilizador (nome_utilizador, password, tipo_utilizador) VALUES (?, ?, ?)");
+$stmt_insert->bind_param("ssi", $user, $pass, $tipo);
+
+if ($stmt_insert->execute()) {
     $_SESSION["utilizador"] = $user;
     echo "Registo efetuado com sucesso! Redirecionando...";
     header("refresh:2; url=index.php");
 } else {
-    echo "Erro ao registar: " . mysqli_error($conn);
+    echo "Erro ao registar: " . $stmt_insert->error;
 }
 
-mysqli_close($conn);
+$stmt_check->close();
+$stmt_insert->close();
+$conn->close();
 ?>
