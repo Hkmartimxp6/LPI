@@ -16,5 +16,4 @@
 	   echo "Erro ao selecionar ao MySQL.";
 	   exit;
 	}
-
 ?>

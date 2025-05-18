@@ -66,7 +66,7 @@
                                             </div>
                                             <div class="d-flex align-items-center justify-content-between pb-4">
                                                 <p class="mb-0 me-2">Não tens conta?</p>
-                                                <a href="Pg_registo.php" type="button"  data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary">Regista-te!</a>
+                                                <a href="registo.php" type="button"  data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary">Regista-te!</a>
                                             </div>
                                         </form>
                                     </div>
