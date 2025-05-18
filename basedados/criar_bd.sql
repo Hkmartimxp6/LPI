@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 18, 2025 at 08:29 PM
+-- Generation Time: May 18, 2025 at 11:52 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,9 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `felixbus`
 --
-
-CREATE DATABASE IF NOT EXISTS `felixbus` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `felixbus`;
 
 -- --------------------------------------------------------
 
@@ -90,7 +87,7 @@ INSERT INTO `tipo_utilizador` (`id_tipo_utilizador`, `descricao`) VALUES
 
 CREATE TABLE `utilizador` (
   `id_utilizador` int(100) NOT NULL,
-  `password` varchar(20) NOT NULL,
+  `password` varchar(500) NOT NULL,
   `nome_utilizador` varchar(20) NOT NULL,
   ` nome` varchar(20) DEFAULT NULL,
   `morada` varchar(40) DEFAULT NULL,
@@ -103,9 +100,10 @@ CREATE TABLE `utilizador` (
 --
 
 INSERT INTO `utilizador` (`id_utilizador`, `password`, `nome_utilizador`, ` nome`, `morada`, `telemovel`, `tipo_utilizador`) VALUES
-(1, 'admin', 'admin', NULL, NULL, NULL, 1),
-(2, 'funcionario', 'funcionario', NULL, NULL, NULL, 2),
-(3, 'cliente', 'cliente', NULL, NULL, NULL, 3);
+(8, '21232f297a57a5a743894a0e4a801fc3', 'admin', NULL, NULL, NULL, 1),
+(9, '4983a0ab83ed86e0e7213c8783940193', 'cliente', NULL, NULL, NULL, 3),
+(10, 'cc7a84634199040d54376793842fe035', 'funcionario', NULL, NULL, NULL, 2),
+(11, '202cb962ac59075b964b07152d234b70', 'tom', NULL, NULL, NULL, 4);
 
 -- --------------------------------------------------------
 
@@ -200,7 +198,7 @@ ALTER TABLE `tipo_utilizador`
 -- AUTO_INCREMENT for table `utilizador`
 --
 ALTER TABLE `utilizador`
-  MODIFY `id_utilizador` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_utilizador` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `viagem`
