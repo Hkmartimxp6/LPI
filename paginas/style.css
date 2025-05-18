@@ -279,7 +279,7 @@ button {
      color: #114c7d;
      font-weight: 400;
      font-size: 28px;
-     background-image: url('../images/fevicon.png');
+     background-image: url('fevicon.png');
      background-repeat: no-repeat;
      padding-left: 55px;
      letter-spacing: -0.5px;
@@ -436,7 +436,7 @@ a.readmore_bt {
 /*--------------------------------------------------------------------- header area ---------------------------------------------------------------------*/
 
 .header {
-     background: url(../images/header-bg.jpg);
+     background: url(header-bg.jpg);
      background-color: rgba(0, 0, 0, 0);
      background-repeat: repeat;
      background-size: auto;
@@ -454,6 +454,7 @@ a.readmore_bt {
      min-height: 110px;
      padding-top: 50px;
      height: 120px;
+     position: relative;
 }
 
 .logo {
@@ -1217,8 +1218,18 @@ ul.top_icon li a {
      width: 100%;
      height: 100%;
 }
+.banner-main {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 1;
+}
+.banner-main .container {
+  position: relative;
+  z-index: 2;
+}
 .banner-up-text {
-     position: absolute;
+     position: relative;
      bottom: 10px;
      left: 0px;
      right: 0px;
@@ -1366,19 +1377,19 @@ ul.top_icon li a {
 }
 .heroslider .slider-01 {
      width: 100%;
-     background-image: url(../images/slider-01.jpg);
+     background-image: url(slider-01.jpg);
      background-size: cover;
      background-position: center;
 }
 .heroslider .slider-02 {
      width: 100%;
-     background-image: url(../images/slider-02.jpg);
+     background-image: url(slider-02.jpg);
      background-size: cover;
      background-position: center;
 }
 .heroslider .slider-03 {
      width: 100%;
-     background-image: url(../images/slider-03.jpg);
+     background-image: url(slider-03.jpg);
      background-size: cover;
      background-position: center;
 }
@@ -1595,7 +1606,7 @@ input[type="radio"] .styled:checked+label::after {
 .header_information::after {
      width: 41px;
      height: 50px;
-     background: url(../images/top_arrow.png);
+     background: url(top_arrow.png);
      display: block;
      content: "";
      position: absolute;
@@ -1628,7 +1639,7 @@ input[type="radio"] .styled:checked+label::after {
     position: relative;
     width: 100%;
     height: 85vh; /* Ensure the banner takes up full screen height */
-    background: url('images/banner.png') no-repeat center center;
+    background: url('banner.png') no-repeat center center;
     background-size: cover; /* This will make the image cover the entire area */
 }
 
@@ -2009,7 +2020,7 @@ input[type="radio"] .styled:checked+label::after {
      margin: 0px 5px;
 }
 .amazing {
-     background: url(../images/Amazing.jpg);
+     background: url(Amazing.jpg);
      padding: 90px 0px;
      background-size: 100% 100%;
      background-repeat: no-repeat;
