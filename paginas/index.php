@@ -15,6 +15,7 @@ if (isset($_SESSION['utilizador'])) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
    <!-- basic -->
    <meta charset="utf-8">
@@ -46,6 +47,7 @@ if (isset($_SESSION['utilizador'])) {
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
 </head>
 <!-- body -->
+
 <body class="main-layout">
    <!-- loader  -->
    <div class="loader_bg">
@@ -65,19 +67,18 @@ if (isset($_SESSION['utilizador'])) {
                            <li><img src="1.png" alt="#" /> Alameda Cardeal Cerejeira</li>
                            <li><img src="2.png" alt="#" /> +351 963 961 984</li>
                            <li><img src="3.png" alt="#" /> felixbus@gmail.com</li>
-                              <!---caso esteja logado aparece o icon -->
-                              <?php if ($loggedIn): ?>
-                                <li>
-                                  <a href="perfil.php" title="Perfil">
+                           <!---caso esteja logado aparece o icon -->
+                           <?php if ($loggedIn): ?>
+                              <li>
+                                 <a href="perfil.php" title="Perfil">
                                     <img src="icon_utilizador.png" alt="Ícone do Utilizador" style="width: 48px; height: 48px; border-radius: 50%; background-color: #fff; padding: 4px;">
-                                  </a>
-                                </li>
-                              <?php else: ?>
-                                <li>
-                                  <a class="botao_vazis" href="login.php">Faz Login!</a>
-                                </li>
-                              <?php endif; ?>
-
+                                 </a>
+                              </li>
+                           <?php else: ?>
+                              <li>
+                                 <a class="botao_vazis" href="login.php">Faz Login!</a>
+                              </li>
+                           <?php endif; ?>
                         </ul>
                      </div>
                   </div>
@@ -223,7 +224,7 @@ if (isset($_SESSION['utilizador'])) {
    <!-- javascript -->
    <script src="owl.carousel.js"></script>
    <script>
-      $(document).ready(function () {
+      $(document).ready(function() {
          var owl = $('.owl-carousel');
          owl.owlCarousel({
             margin: 10,
@@ -244,4 +245,5 @@ if (isset($_SESSION['utilizador'])) {
       })
    </script>
 </body>
+
 </html>
