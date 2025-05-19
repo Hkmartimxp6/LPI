@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -63,7 +64,9 @@
                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col logo_section">
                   <div class="full">
                      <div class="center-desk">
-                        <div class="logo"> <a href="index.php"><img src="logo.png" style="width:300px;" alt="#"></a> </div>
+                        <div class="logo">
+                           <a href="index.php"><img src="logo.png" style="width:300px;" alt="#"></a>
+                        </div>
                      </div>
                   </div>
                </div>
@@ -92,44 +95,52 @@
       <div class="banner-main">
          <img src="banner.png" alt="#" style="width: 100%; height: 100%; object-fit: cover;" />
 
-         <!-- text-bg moved directly under banner-main to overlay the image -->
-         <div class="text-bg">
-            <h1>Viaja da Melhor<br><strong class="white">Maneira!</strong></h1>
-            <div class="button_section">
-               <a class="main_bt" href="login.php">Faz Login!</a>
-            </div>
-            <div class="container">
-               <div class="row justify-content-center">
-                  <div class="col-lg-12 col-md-10 col-sm-12">
-                     <form class="main-form">
-                        <h3 id="procurar">Encontra a tua viagem</h3>
-                        <div class="row">
-                           <div class="col-md-4 col-sm-6">
-                              <label>Origem</label>
-                              <input class="form-control" placeholder="" type="text" name="">
-                           </div>
-                           <div class="col-md-4 col-sm-6">
-                              <label>Destino</label>
-                              <input class="form-control" type="text" name="">
-                           </div>
-                           <div class="col-md-4 col-sm-6">
-                              <label>Data</label>
-                              <input class="form-control" placeholder="Any" type="date" name="Any">
-                           </div>
-                           <div class="col-12 text-center mt-3">
-                              <button type="submit" class="btn btn-primary" style="background-color: #EE580F; border:#EE580F">Procurar</button>
-                           </div>
-                        </div>
-                     </form>
-                  </div>
-               </div>
-            </div>
+```
+     <!-- text-bg moved directly under banner-main to overlay the image -->
+     <div class="text-bg">
+        <h1>Viaja da Melhor<br><strong class="white">Maneira!</strong></h1>
 
-         </div>
-      </div>
+        
+           <div class="button_section">
+              <a class="main_bt" href="login.php">Faz Login!</a>
+           </div>
+
+           <div class="container">
+              <div class="row justify-content-center">
+                 <div class="col-lg-12 col-md-10 col-sm-12">
+                    <form class="main-form">
+                       <h3 id="procurar">Encontra a tua viagem</h3>
+                       <div class="row">
+                          <div class="col-md-4 col-sm-6">
+                             <label>Origem</label>
+                             <input class="form-control" placeholder="" type="text" name="">
+                          </div>
+                          <div class="col-md-4 col-sm-6">
+                             <label>Destino</label>
+                             <input class="form-control" type="text" name="">
+                          </div>
+                          <div class="col-md-4 col-sm-6">
+                             <label>Data</label>
+                             <input class="form-control" placeholder="Any" type="date" name="Any">
+                          </div>
+                          <div class="col-12 text-center mt-3">
+                             <button type="submit" class="btn btn-primary" style="background-color: #EE580F; border:#EE580F">Procurar</button>
+                          </div>
+                       </div>
+                    </form>
+                 </div>
+              </div>
+           </div>
+        </div>
+
+     </div>
+  </div>
+```
+
    </section>
-   
+
    <!-- footer -->
+
    <footer>
       <div id="contact" class="footer">
          <div class="container">
@@ -201,7 +212,7 @@
    <!-- javascript -->
    <script src="owl.carousel.js"></script>
    <script>
-      $(document).ready(function() {
+      $(document).ready(function () {
          var owl = $('.owl-carousel');
          owl.owlCarousel({
             margin: 10,
@@ -226,4 +237,4 @@
 
 </html>
 <?php
-?>
+?>    
