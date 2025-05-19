@@ -310,6 +310,53 @@ button {
      border: solid #000 2px;
      color: #fff;
 }
+.sidebar-user {
+   position: fixed;
+   top: 0;
+   right: -300px;
+   width: 300px;
+   height: 100%;
+   background-color: #fff;
+   box-shadow: -2px 0 8px rgba(0, 0, 0, 0.2);
+   transition: right 0.3s ease;
+   z-index: 9999;
+   padding: 20px;
+}
+
+.sidebar-user.active {
+   right: 0;
+}
+
+.sidebar-header {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   font-size: 18px;
+   font-weight: bold;
+   margin-bottom: 20px;
+}
+
+.close-btn {
+   background: none;
+   border: none;
+   font-size: 24px;
+   cursor: pointer;
+}
+
+.sidebar-menu {
+   list-style: none;
+   padding: 0;
+}
+
+.sidebar-menu li {
+   margin-bottom: 15px;
+}
+
+.sidebar-menu a {
+   text-decoration: none;
+   color: #333;
+   font-weight: 500;
+}
 
 a.readmore_bt {
      color: #fff;

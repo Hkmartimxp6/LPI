@@ -12,6 +12,10 @@ if (isset($_SESSION['utilizador'])) {
    $loggedIn = true;
 }
 
+
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -49,6 +53,19 @@ if (isset($_SESSION['utilizador'])) {
 <!-- body -->
 
 <body class="main-layout">
+   <!-- Sidebar oculta -->
+   <div id="sidebarUser" class="sidebar-user">
+      <div class="sidebar-header">
+         <span>Olá, <?= $_SESSION['utilizador'] ?? 'Utilizador' ?></span>
+         <button onclick="toggleSidebar()" class="close-btn">×</button>
+      </div>
+      <ul class="sidebar-menu">
+         <li><a href="perfil.php">Perfil</a></li>
+         <li><a href="carteira.php">Carteira</a></li>
+         <li><a href="historico.php">Histórico</a></li>
+         <li><a href="logout.php">Logout</a></li>
+      </ul>
+   </div>
    <!-- loader  -->
    <div class="loader_bg">
       <div class="loader"><img src="loading.gif" alt="#" /></div>
@@ -70,9 +87,11 @@ if (isset($_SESSION['utilizador'])) {
                            <!---caso esteja logado aparece o icon -->
                            <?php if ($loggedIn): ?>
                               <li>
-                                 <a href="perfil.php" title="Perfil">
-                                    <img src="icon_utilizador.png" alt="Ícone do Utilizador" style="width: 48px; height: 48px; border-radius: 50%; background-color: #fff; padding: 4px;">
+                                 <a href="javascript:void(0);" onclick="toggleSidebar()" title="Perfil">
+                                    <img src="icon_utilizador.png" alt="Ícone do Utilizador"
+                                       style="width: 48px; height: 48px; border-radius: 50%; background-color: #fff; padding: 4px;">
                                  </a>
+
                               </li>
                            <?php else: ?>
                               <li>
@@ -243,6 +262,11 @@ if (isset($_SESSION['utilizador'])) {
             }
          })
       })
+
+      function toggleSidebar() {
+         const sidebar = document.getElementById("sidebarUser");
+         sidebar.classList.toggle("active");
+      }
    </script>
 </body>
 
