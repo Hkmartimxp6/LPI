@@ -1,9 +1,9 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.2
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 18, 2025 at 11:52 PM
+-- Generation Time: May 19, 2025 at 08:15 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,9 +20,32 @@ SET time_zone = "+00:00";
 --
 -- Database: `felixbus`
 --
-
 CREATE DATABASE IF NOT EXISTS `felixbus` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `felixbus`;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `alerta`
+--
+
+CREATE TABLE `alerta` (
+  `id_alerta` int(100) NOT NULL,
+  `descricao` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `alerta_utilizador`
+--
+
+CREATE TABLE `alerta_utilizador` (
+  `id_utilizador` int(100) NOT NULL,
+  `id_alerta` int(100) NOT NULL,
+  `data` datetime(6) NOT NULL DEFAULT current_timestamp(6)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 -- --------------------------------------------------------
 
 --
@@ -50,13 +73,58 @@ CREATE TABLE `bilhete` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `carteira`
+--
+
+CREATE TABLE `carteira` (
+  `id_carteira` int(100) NOT NULL,
+  `saldo` decimal(65,3) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `carteira_log`
+--
+
+CREATE TABLE `carteira_log` (
+  `id_carteira` int(100) NOT NULL,
+  `id_operacao` int(100) NOT NULL,
+  `data` datetime(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `localidade`
+--
+
+CREATE TABLE `localidade` (
+  `id_localidade` int(100) NOT NULL,
+  `localidade` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `operacao`
+--
+
+CREATE TABLE `operacao` (
+  `id_operacao` int(100) NOT NULL,
+  `descricao` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `rota`
 --
 
 CREATE TABLE `rota` (
   `id_rota` int(100) NOT NULL,
-  `origem` varchar(100) NOT NULL,
-  `destino` varchar(100) NOT NULL
+  `id_origem` int(100) NOT NULL,
+  `id_destino` int(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -94,18 +162,9 @@ CREATE TABLE `utilizador` (
   ` nome` varchar(20) DEFAULT NULL,
   `morada` varchar(40) DEFAULT NULL,
   `telemovel` varchar(20) DEFAULT NULL,
-  `tipo_utilizador` int(100) NOT NULL
+  `tipo_utilizador` int(100) NOT NULL,
+  `id_carteira_utilizador` int(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `utilizador`
---
-
-INSERT INTO `utilizador` (`id_utilizador`, `password`, `nome_utilizador`, ` nome`, `morada`, `telemovel`, `tipo_utilizador`) VALUES
-(8, '21232f297a57a5a743894a0e4a801fc3', 'admin', NULL, NULL, NULL, 1),
-(9, '4983a0ab83ed86e0e7213c8783940193', 'cliente', NULL, NULL, NULL, 3),
-(10, 'cc7a84634199040d54376793842fe035', 'funcionario', NULL, NULL, NULL, 2),
-(11, '202cb962ac59075b964b07152d234b70', 'tom', NULL, NULL, NULL, 4);
 
 -- --------------------------------------------------------
 
@@ -127,6 +186,19 @@ CREATE TABLE `viagem` (
 --
 
 --
+-- Indexes for table `alerta`
+--
+ALTER TABLE `alerta`
+  ADD PRIMARY KEY (`id_alerta`);
+
+--
+-- Indexes for table `alerta_utilizador`
+--
+ALTER TABLE `alerta_utilizador`
+  ADD KEY `id_utilizador` (`id_utilizador`,`id_alerta`),
+  ADD KEY `id_alerta_fk` (`id_alerta`);
+
+--
 -- Indexes for table `autocarro`
 --
 ALTER TABLE `autocarro`
@@ -141,10 +213,37 @@ ALTER TABLE `bilhete`
   ADD KEY `id_utilizador` (`id_utilizador`);
 
 --
+-- Indexes for table `carteira`
+--
+ALTER TABLE `carteira`
+  ADD PRIMARY KEY (`id_carteira`);
+
+--
+-- Indexes for table `carteira_log`
+--
+ALTER TABLE `carteira_log`
+  ADD KEY `id_carteira` (`id_carteira`,`id_operacao`),
+  ADD KEY `id_operacao_fk` (`id_operacao`);
+
+--
+-- Indexes for table `localidade`
+--
+ALTER TABLE `localidade`
+  ADD PRIMARY KEY (`id_localidade`);
+
+--
+-- Indexes for table `operacao`
+--
+ALTER TABLE `operacao`
+  ADD PRIMARY KEY (`id_operacao`);
+
+--
 -- Indexes for table `rota`
 --
 ALTER TABLE `rota`
-  ADD PRIMARY KEY (`id_rota`);
+  ADD PRIMARY KEY (`id_rota`),
+  ADD KEY `id_origem` (`id_origem`),
+  ADD KEY `id_destino` (`id_destino`);
 
 --
 -- Indexes for table `tipo_utilizador`
@@ -158,7 +257,9 @@ ALTER TABLE `tipo_utilizador`
 ALTER TABLE `utilizador`
   ADD PRIMARY KEY (`id_utilizador`),
   ADD UNIQUE KEY `nome_utilizador` (`nome_utilizador`),
-  ADD KEY `tipo_utilizador` (`tipo_utilizador`);
+  ADD KEY `tipo_utilizador` (`tipo_utilizador`),
+  ADD KEY `id_carteira` (`id_carteira_utilizador`),
+  ADD KEY `id_carteira_utilizador` (`id_carteira_utilizador`);
 
 --
 -- Indexes for table `viagem`
@@ -173,6 +274,12 @@ ALTER TABLE `viagem`
 --
 
 --
+-- AUTO_INCREMENT for table `alerta`
+--
+ALTER TABLE `alerta`
+  MODIFY `id_alerta` int(100) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `autocarro`
 --
 ALTER TABLE `autocarro`
@@ -183,6 +290,24 @@ ALTER TABLE `autocarro`
 --
 ALTER TABLE `bilhete`
   MODIFY `id_bilhete` int(100) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `carteira`
+--
+ALTER TABLE `carteira`
+  MODIFY `id_carteira` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20250003;
+
+--
+-- AUTO_INCREMENT for table `localidade`
+--
+ALTER TABLE `localidade`
+  MODIFY `id_localidade` int(100) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `operacao`
+--
+ALTER TABLE `operacao`
+  MODIFY `id_operacao` int(100) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `rota`
@@ -213,6 +338,13 @@ ALTER TABLE `viagem`
 --
 
 --
+-- Constraints for table `alerta_utilizador`
+--
+ALTER TABLE `alerta_utilizador`
+  ADD CONSTRAINT `id_alerta_fk` FOREIGN KEY (`id_alerta`) REFERENCES `alerta` (`id_alerta`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `id_utilizador_fk` FOREIGN KEY (`id_utilizador`) REFERENCES `utilizador` (`id_utilizador`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `bilhete`
 --
 ALTER TABLE `bilhete`
@@ -220,10 +352,30 @@ ALTER TABLE `bilhete`
   ADD CONSTRAINT `id_viagem_fk` FOREIGN KEY (`id_viagem`) REFERENCES `viagem` (`id_viagem`);
 
 --
+-- Constraints for table `carteira`
+--
+ALTER TABLE `carteira`
+  ADD CONSTRAINT `carteira_ibfk_1` FOREIGN KEY (`id_carteira`) REFERENCES `carteira_log` (`id_carteira`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `carteira_log`
+--
+ALTER TABLE `carteira_log`
+  ADD CONSTRAINT `id_operacao_fk` FOREIGN KEY (`id_operacao`) REFERENCES `operacao` (`id_operacao`);
+
+--
+-- Constraints for table `rota`
+--
+ALTER TABLE `rota`
+  ADD CONSTRAINT `id_destino_fk` FOREIGN KEY (`id_destino`) REFERENCES `localidade` (`id_localidade`),
+  ADD CONSTRAINT `id_origem_fk` FOREIGN KEY (`id_origem`) REFERENCES `localidade` (`id_localidade`);
+
+--
 -- Constraints for table `utilizador`
 --
 ALTER TABLE `utilizador`
-  ADD CONSTRAINT `tipo_utilizador_fk` FOREIGN KEY (`tipo_utilizador`) REFERENCES `tipo_utilizador` (`id_tipo_utilizador`);
+  ADD CONSTRAINT `id_carteira_fk` FOREIGN KEY (`id_carteira_utilizador`) REFERENCES `carteira` (`id_carteira`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `tipo_utilizador_fk` FOREIGN KEY (`tipo_utilizador`) REFERENCES `tipo_utilizador` (`id_tipo_utilizador`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `viagem`
