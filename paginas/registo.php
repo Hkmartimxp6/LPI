@@ -44,44 +44,39 @@
                                     <div class="text-center">
                                         <img src="logo.png" class="img-fluid" style="width: 185px;" alt="logo">
                                     </div>
-                                    <form action="criar_registo.php" method = "post">
-                                        <label class="form-label" for="form2Example11">Utilizador</label>
-                                        <div data-mdb-input-init class="form-outline mb-4">
-                                            <input type="text" id="form2Example11" class="form-control"
-                                                placeholder="O seu nome de utilizador" name = "utilizador_registo"/>
+                                    <form action="criar_registo.php" method="post">
+                                        <label class="form-label" for="utilizador_registo">Utilizador</label>
+                                        <div class="form-outline mb-4">
+                                            <input type="text" id="utilizador_registo" class="form-control" placeholder="O seu nome de utilizador" name="utilizador_registo" required />
                                         </div>
 
-                                        <label class="form-label" for="form2Example11">Email</label>
-                                        <div data-mdb-input-init class="form-outline mb-4">
-                                            <input type="email" id="form2Example11" class="form-control"
-                                                placeholder="O seu email" name = "email"/>
+                                        <label class="form-label" for="email_registo">Email</label>
+                                        <div class="form-outline mb-4">
+                                            <input type="email" id="email_registo" class="form-control" placeholder="O seu email" name="email_registo" required />
                                         </div>
 
-                                        <label class="form-label" for="form2Example22">Password</label>
-                                        <div data-mdb-input-init class="form-outline mb-4">
-                                            <input type="password" id="form2Example22" class="form-control"
-                                                placeholder="A sua password" name = "password_registo"/>
+                                        <label class="form-label" for="password_registo">Password</label>
+                                        <div class="form-outline mb-4">
+                                            <input type="password" id="password_registo" class="form-control" placeholder="A sua password" name="password_registo" required />
                                         </div>
 
-                                        <label class="form-label" for="form2Example22">Repita a Password</label>
-                                        <div data-mdb-input-init class="form-outline mb-4">
-                                            <input type="password" id="form2Example22" class="form-control"
-                                                placeholder="A sua password" name = "confirmar_password" />
+                                        <label class="form-label" for="confirmar_password">Repita a Password</label>
+                                        <div class="form-outline mb-4">
+                                            <input type="password" id="confirmar_password" class="form-control" placeholder="A sua password" name="confirmar_password" required />
                                         </div>
+
                                         <div class="text-center pt-1 mb-5 pb-1">
-                                            <button data-mdb-button-init data-mdb-ripple-init
-                                                class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3"
-                                                type="submit" style="height: 40px;">
+                                            <button class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" type="submit" style="height: 40px;">
                                                 Registar
                                             </button>
-
                                         </div>
+
                                         <div class="d-flex align-items-center justify-content-between pb-4">
                                             <p class="mb-0 me-2">Já tens conta?</p>
-                                            <a href="login.php" type="button" data-mdb-button-init data-mdb-ripple-init
-                                                class="btn btn-outline-primary">Faz Login!</a>
+                                            <a href="login.php" class="btn btn-outline-primary">Faz Login!</a>
                                         </div>
                                     </form>
+
                                 </div>
                             </div>
                             <div class="col-lg-6 d-flex align-items-center gradient-custom-2">

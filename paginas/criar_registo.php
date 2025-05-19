@@ -10,6 +10,7 @@ if (!isset($_POST['utilizador_registo']) || !isset($_POST['password_registo'])) 
 
 $user = $_POST["utilizador_registo"];
 $pass = md5($_POST["password_registo"]);
+$email = $_POST["email_registo"];
 $tipo = CLIENTE_NAO_VALIDO;
 
 // Querry para verificar se o utilizador já existe
@@ -40,8 +41,8 @@ if (!$stmt_carteira->execute()) {
 $stmt_carteira->close();
 
 // Inserir o novo utilizador
-$stmt_insert = $conn->prepare("INSERT INTO utilizador (nome_utilizador, password, tipo_utilizador, id_carteira) VALUES (?, ?, ?, ?)");
-$stmt_insert->bind_param("ssii", $user, $pass, $tipo, $new_id_carteira);
+$stmt_insert = $conn->prepare("INSERT INTO utilizador (nome_utilizador, password, tipo_utilizador, id_carteira, email) VALUES (?, ?, ?, ?, ?)");
+$stmt_insert->bind_param("ssiis", $user, $pass, $tipo, $new_id_carteira, $email);
 
 // caso o insert funcione, voltar para a pagina inicial
 if ($stmt_insert->execute()) {
