@@ -53,6 +53,7 @@
                            <li><img src="1.png" alt="#" /> Alameda Cardeal Cerejeira</li>
                            <li><img src="2.png" alt="#" /> +351 963 961 984</li>
                            <li><img src="3.png" alt="#" /> felixbus@gmail.com</li>
+                           <li><a class="botao_vazis" href="login.php">Faz Login!</a></li>    
                         </ul>
                      </div>
                   </div>
@@ -95,19 +96,13 @@
       <div class="banner-main">
          <img src="banner.png" alt="#" style="width: 100%; height: 100%; object-fit: cover;" />
 
-```
+
      <!-- text-bg moved directly under banner-main to overlay the image -->
      <div class="text-bg">
-        <h1>Viaja da Melhor<br><strong class="white">Maneira!</strong></h1>
-
-        
-           <div class="button_section">
-              <a class="main_bt" href="login.php">Faz Login!</a>
-           </div>
-
-           <div class="container">
+        <h1 style = "padding-top: 250px;">Viaja da Melhor<br><strong class="white">Maneira!</strong></h1>
+           <div class="container" style =" padding-bottom: 100px;">
               <div class="row justify-content-center">
-                 <div class="col-lg-12 col-md-10 col-sm-12">
+                 <div class="col-lg-12 col-md-10 col-sm-12" style ="padding-bottom: 70px;">
                     <form class="main-form">
                        <h3 id="procurar">Encontra a tua viagem</h3>
                        <div class="row">
@@ -135,7 +130,7 @@
 
      </div>
   </div>
-```
+
 
    </section>
 

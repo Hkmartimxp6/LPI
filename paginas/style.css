@@ -293,13 +293,22 @@ button {
 .main_bt {
      background: #ee580f;
      color: #fff;
-     padding: 15px 60px 15px 60px;
-     float: left;
-     font-size: 15px;
-     font-weight: 400;
-     border: solid #ee580f 2px;
-     border-radius: 30px;
-     margin: 15px 0px 60px 0px;
+     border-radius: 5px;    
+}
+
+.botao_vazis{
+      background: #ee580f;
+     color: #fff;
+     border-radius: 5px;
+     padding: 10px 10px;
+     
+}
+
+.botao_vazis:hover,
+.botao_vazis:focus {
+     background: #000;
+     border: solid #000 2px;
+     color: #fff;
 }
 
 a.readmore_bt {
@@ -1597,7 +1606,7 @@ input[type="radio"] .styled:checked+label::after {
      margin-bottom: 0;
      position: absolute;
      width: 100%;
-     max-width: 900px;
+     max-width: 920px;
      height: 50px;
      top: -50px;
      padding-top: 10px;
@@ -2157,7 +2166,7 @@ label {
 }
 .footer {
      background-color: #022739;
-     margin-top: 90px;
+     
 }
 .footer .Follow {
      margin-bottom: 27px;
