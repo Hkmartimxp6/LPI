@@ -1609,7 +1609,7 @@ input[type="radio"] .styled:checked+label::after {
      max-width: 920px;
      height: 50px;
      top: -50px;
-     padding-top: 10px;
+     padding-top: 2px;
      right: 0;
 }
 .header_information::after {
@@ -1633,6 +1633,7 @@ input[type="radio"] .styled:checked+label::after {
 }
 .header_information ul li img {
      padding-right: 10px;
+     vertical-align: middle;
 }
 .text-bg {
      position: absolute;
