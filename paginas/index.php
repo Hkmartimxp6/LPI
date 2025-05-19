@@ -62,7 +62,6 @@ if (isset($_SESSION['utilizador'])) {
       <ul class="sidebar-menu">
          <li><a href="perfil.php">Perfil</a></li>
          <li><a href="carteira.php">Carteira</a></li>
-         <li><a href="historico.php">Histórico</a></li>
          <li><a href="logout.php">Logout</a></li>
       </ul>
    </div>
@@ -89,9 +88,11 @@ if (isset($_SESSION['utilizador'])) {
                               <li>
                                  <a href="javascript:void(0);" onclick="toggleSidebar()" title="Perfil">
                                     <img src="icon_utilizador.png" alt="Ícone do Utilizador"
-                                       style="width: 48px; height: 48px; border-radius: 50%; background-color: #fff; padding: 4px;">
+                                       style="width: 48px; height: 48px; 
+                                                 border-radius: 50%; 
+                                                 background-color: #fff; 
+                                                 padding: 4px;">
                                  </a>
-
                               </li>
                            <?php else: ?>
                               <li>
