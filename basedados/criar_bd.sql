@@ -21,6 +21,8 @@ SET time_zone = "+00:00";
 -- Database: `felixbus`
 --
 
+CREATE DATABASE IF NOT EXISTS `felixbus` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `felixbus`;
 -- --------------------------------------------------------
 
 --
