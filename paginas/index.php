@@ -1,7 +1,20 @@
+<?php
+
+include "../basedados/basedados.h";
+include "utilizadores.php";
+
+session_start();
+
+$loggedIn = false;
+
+// Se o utilizador está com sessão iniciada, então está logado
+if (isset($_SESSION['utilizador'])) {
+   $loggedIn = true;
+}
+
+?>
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
    <!-- basic -->
    <meta charset="utf-8">
@@ -33,7 +46,6 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
 </head>
 <!-- body -->
-
 <body class="main-layout">
    <!-- loader  -->
    <div class="loader_bg">
@@ -53,7 +65,19 @@
                            <li><img src="1.png" alt="#" /> Alameda Cardeal Cerejeira</li>
                            <li><img src="2.png" alt="#" /> +351 963 961 984</li>
                            <li><img src="3.png" alt="#" /> felixbus@gmail.com</li>
-                           <li><a class="botao_vazis" href="login.php">Faz Login!</a></li>    
+                              <!---caso esteja logado aparece o icon -->
+                              <?php if ($loggedIn): ?>
+                                <li>
+                                  <a href="perfil.php" title="Perfil">
+                                    <img src="icon_utilizador.png" alt="Ícone do Utilizador" style="width: 48px; height: 48px; border-radius: 50%; background-color: #fff; padding: 4px;">
+                                  </a>
+                                </li>
+                              <?php else: ?>
+                                <li>
+                                  <a class="botao_vazis" href="login.php">Faz Login!</a>
+                                </li>
+                              <?php endif; ?>
+
                         </ul>
                      </div>
                   </div>
@@ -95,47 +119,39 @@
    <section>
       <div class="banner-main">
          <img src="banner.png" alt="#" style="width: 100%; height: 100%; object-fit: cover;" />
-
-
-     <!-- text-bg moved directly under banner-main to overlay the image -->
-     <div class="text-bg">
-        <h1 style = "padding-top: 250px;">Viaja da Melhor<br><strong class="white">Maneira!</strong></h1>
-           <div class="container" style =" padding-bottom: 100px;">
-              <div class="row justify-content-center">
-                 <div class="col-lg-12 col-md-10 col-sm-12" style ="padding-bottom: 70px;">
-                    <form class="main-form">
-                       <h3 id="procurar">Encontra a tua viagem</h3>
-                       <div class="row">
-                          <div class="col-md-4 col-sm-6">
-                             <label>Origem</label>
-                             <input class="form-control" placeholder="" type="text" name="">
-                          </div>
-                          <div class="col-md-4 col-sm-6">
-                             <label>Destino</label>
-                             <input class="form-control" type="text" name="">
-                          </div>
-                          <div class="col-md-4 col-sm-6">
-                             <label>Data</label>
-                             <input class="form-control" placeholder="Any" type="date" name="Any">
-                          </div>
-                          <div class="col-12 text-center mt-3">
-                             <button type="submit" class="btn btn-primary" style="background-color: #EE580F; border:#EE580F">Procurar</button>
-                          </div>
-                       </div>
-                    </form>
-                 </div>
-              </div>
-           </div>
-        </div>
-
-     </div>
-  </div>
-
-
+         <!-- text-bg moved directly under banner-main to overlay the image -->
+         <div class="text-bg">
+            <h1 style="padding-top: 250px;">Viaja da Melhor<br><strong class="white">Maneira!</strong></h1>
+            <div class="container" style="padding-bottom: 100px;">
+               <div class="row justify-content-center">
+                  <div class="col-lg-12 col-md-10 col-sm-12" style="padding-bottom: 70px;">
+                     <form class="main-form">
+                        <h3 id="procurar">Encontra a tua viagem</h3>
+                        <div class="row">
+                           <div class="col-md-4 col-sm-6">
+                              <label>Origem</label>
+                              <input class="form-control" placeholder="" type="text" name="">
+                           </div>
+                           <div class="col-md-4 col-sm-6">
+                              <label>Destino</label>
+                              <input class="form-control" type="text" name="">
+                           </div>
+                           <div class="col-md-4 col-sm-6">
+                              <label>Data</label>
+                              <input class="form-control" placeholder="Any" type="date" name="Any">
+                           </div>
+                           <div class="col-12 text-center mt-3">
+                              <button type="submit" class="btn btn-primary" style="background-color: #EE580F; border:#EE580F">Procurar</button>
+                           </div>
+                        </div>
+                     </form>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
    </section>
-
    <!-- footer -->
-
    <footer>
       <div id="contact" class="footer">
          <div class="container">
@@ -227,9 +243,5 @@
          })
       })
    </script>
-
 </body>
-
 </html>
-<?php
-?>    
