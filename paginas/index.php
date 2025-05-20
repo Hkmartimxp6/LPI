@@ -121,11 +121,10 @@ if (isset($_SESSION['utilizador'])) {
                      <div class="limit-box">
                         <nav class="main-menu">
                            <ul class="menu-area-main">
-                              <li class="active"> <a href="#">Home</a> </li>
-                              <li> <a href="#about">About</a> </li>
-                              <li><a href="#travel">Travel</a></li>
-                              <li><a href="#blog">Blog</a></li>
-                              <li><a href="#contact">Contact Us</a></li>
+                              <li class="active"> <a href="#">Início</a> </li>
+                              <li> <a href="sobre_nos.php">Sobre nós</a> </li>
+                              <li><a href="#travel">Viaja</a></li>
+                              <li><a href="#contact">Contacta-nos</a></li>
                            </ul>
                         </nav>
                      </div>
