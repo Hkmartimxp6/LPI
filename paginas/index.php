@@ -80,24 +80,23 @@ if (isset($_SESSION['utilizador'])) {
                <div class="row">
                   <div class="col-md-12">
                      <div class="header_information">
-                        <ul>
+                        <ul class="lista" style="display:flex; align-items: center; height: 100%;">
                            <li><img src="1.png" alt="#" /> Alameda Cardeal Cerejeira</li>
                            <li><img src="2.png" alt="#" /> +351 963 961 984</li>
                            <li><img src="3.png" alt="#" /> felixbus@gmail.com</li>
                            <!--Verifica se o utilizador está logado-->
                            <?php if ($loggedIn): ?>
-                              <li>
+                              <li">
                                  <a href="javascript:void(0);" onclick="toggleSidebar()" title="Perfil">
                                     <img src="icon_utilizador.png" alt="Ícone do Utilizador"
                                        style="width: 48px; height: 48px; 
                                                  border-radius: 50%; 
-                                                 background-color: #fff; 
-                                                 padding: 4px;">
+                                                 background-color: #fff;"> 
                                  </a>
                               </li>
                            <?php else: ?>
                               <li>
-                                 <a class="botao_vazis" href="login.php">Faz Login!</a>
+                                 <a class="botao_de_login" href="login.php">Faz Login!</a>
                               </li>
                            <?php endif; ?>
                         </ul>
