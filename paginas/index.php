@@ -62,6 +62,7 @@ if (isset($_SESSION['utilizador'])) {
       <ul class="sidebar-menu">
          <li><a href="perfil.php">Perfil</a></li>
          <li><a href="carteira.php">Carteira</a></li>
+         <li><a href="carteira.php">Carteira</a></li>
          <li><a href="logout.php">Logout</a></li>
       </ul>
    </div>
@@ -83,7 +84,7 @@ if (isset($_SESSION['utilizador'])) {
                            <li><img src="1.png" alt="#" /> Alameda Cardeal Cerejeira</li>
                            <li><img src="2.png" alt="#" /> +351 963 961 984</li>
                            <li><img src="3.png" alt="#" /> felixbus@gmail.com</li>
-                           <!---caso esteja logado aparece o icon -->
+                           <!--Verifica se o utilizador está logado-->
                            <?php if ($loggedIn): ?>
                               <li>
                                  <a href="javascript:void(0);" onclick="toggleSidebar()" title="Perfil">
@@ -196,11 +197,11 @@ if (isset($_SESSION['utilizador'])) {
                   <div class="Follow">
                      <h3>ADDITIONAL LINKS</h3>
                      <ul class="link">
-                        <li> <a href="#">About us</a></li>
-                        <li> <a href="#">Terms and conditions</a></li>
-                        <li> <a href="#"> Privacy policy</a></li>
-                        <li> <a href="#">News</a></li>
-                        <li> <a href="#"> Contact us</a></li>
+                        <li> <a href="#">Sobre nós</a></li>
+                        <li> <a href="#">Termos e Condições</a></li>
+                        <li> <a href="#">Política de Privacidade</a></li>
+                        <li> <a href="#">Notícias</a></li>
+                        <li> <a href="#">Contacte-nos</a></li>
                      </ul>
                   </div>
                </div>
