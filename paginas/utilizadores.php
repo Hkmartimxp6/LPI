@@ -1,5 +1,5 @@
 <?php
-define('ADMIN', 1);
+define('ADMINISTRADOR', 1);
 define('FUNCIONARIO', 2);
 define('CLIENTE', 3);
 define('CLIENTE_NAO_VALIDO', 4);

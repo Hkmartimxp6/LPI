@@ -8,13 +8,9 @@ session_start();
 $loggedIn = false;
 
 // Se o utilizador está com sessão iniciada, então está logado
-if (isset($_SESSION['utilizador'])) {
+if (isset($_SESSION["utilizador"])) {
    $loggedIn = true;
 }
-
-
-
-
 
 ?>
 <!DOCTYPE html>
@@ -53,15 +49,14 @@ if (isset($_SESSION['utilizador'])) {
 <!-- body -->
 
 <body class="main-layout">
-   <!-- Sidebar oculta -->
+   <!-- Sidebar com o menu do utilizador -->
    <div id="sidebarUser" class="sidebar-user">
       <div class="sidebar-header">
-         <span>Olá, <?= $_SESSION['utilizador'] ?? 'Utilizador' ?></span>
+         <span>Olá, <?php $_SESSION["utilizador"] ?? "utilizador" ?></span>
          <button onclick="toggleSidebar()" class="close-btn">×</button>
       </div>
       <ul class="sidebar-menu">
-         <li><a href="perfil.php">Perfil</a></li>
-         <li><a href="carteira.php">Carteira</a></li>
+         <li><a href="pagina_utilizador.php">Perfil</a></li>
          <li><a href="carteira.php">Carteira</a></li>
          <li><a href="logout.php">Logout</a></li>
       </ul>
@@ -85,6 +80,7 @@ if (isset($_SESSION['utilizador'])) {
                            <li><img src="2.png" alt="#" /> +351 963 961 984</li>
                            <li><img src="3.png" alt="#" /> felixbus@gmail.com</li>
                            <!--Verifica se o utilizador está logado-->
+                           <!--Se o utilizador estiver autenticado apresenta uma side bar com um menu-->
                            <?php if ($loggedIn): ?>
                               <li>
                                  <a href="javascript:void(0);" onclick="toggleSidebar()" title="Perfil">
@@ -97,7 +93,7 @@ if (isset($_SESSION['utilizador'])) {
                               </li>
                            <?php else: ?>
                               <li>
-                                 <a class="botao_vazis" href="login.php">Faz Login!</a>
+                                 <a class="botao_login" href="login.php">Faz Login!</a>
                               </li>
                            <?php endif; ?>
                         </ul>
@@ -140,12 +136,12 @@ if (isset($_SESSION['utilizador'])) {
    <section>
       <div class="banner-main">
          <img src="banner.png" alt="#" style="width: 100%; height: 100%; object-fit: cover;" />
-         <!-- text-bg moved directly under banner-main to overlay the image -->
          <div class="text-bg">
             <h1 style="padding-top: 250px;">Viaja da Melhor<br><strong class="white">Maneira!</strong></h1>
             <div class="container" style="padding-bottom: 100px;">
                <div class="row justify-content-center">
                   <div class="col-lg-12 col-md-10 col-sm-12" style="padding-bottom: 70px;">
+                     <!-- Formulário de pesquisa de rotas -->
                      <form class="main-form">
                         <h3 id="procurar">Encontra a tua viagem</h3>
                         <div class="row">
@@ -187,15 +183,15 @@ if (isset($_SESSION['utilizador'])) {
                </div>
                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
                   <div class="Follow">
-                     <h3>CONTACT US</h3>
-                     <span>123 Second Street Fifth <br>Avenue,<br>
-                        Manhattan, New York<br>
-                        +987 654 3210</span>
+                     <h3>Contacte-nos</h3>
+                     <span>123 Segunda Rua Quinta <br>Avenida,<br>
+                        Mana Há Tane, Yorke Nova<br>
+                        +351 963 961 984</span>
                   </div>
                </div>
                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
                   <div class="Follow">
-                     <h3>ADDITIONAL LINKS</h3>
+                     <h3>LINKS ADICIONAIS</h3>
                      <ul class="link">
                         <li> <a href="#">Sobre nós</a></li>
                         <li> <a href="#">Termos e Condições</a></li>
@@ -207,19 +203,19 @@ if (isset($_SESSION['utilizador'])) {
                </div>
                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                   <div class="Follow">
-                     <h3> Contact</h3>
+                     <h3> Contacte</h3>
                      <div class="row">
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
-                           <input class="Newsletter" placeholder="Name" type="text">
+                           <input class="Newsletter" placeholder="Nome" type="text">
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
                            <input class="Newsletter" placeholder="Email" type="text">
                         </div>
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
-                           <textarea class="textarea" placeholder="comment" type="text">Comment</textarea>
+                           <textarea class="textarea" placeholder="Comentário" type="text"></textarea>
                         </div>
                      </div>
-                     <button class="Subscribe">Submit</button>
+                     <button class="Subscribe">Submeter</button>
                   </div>
                </div>
             </div>

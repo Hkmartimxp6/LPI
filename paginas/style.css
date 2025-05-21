@@ -296,7 +296,7 @@ button {
      border-radius: 5px;    
 }
 
-.botao_vazis{
+.botao_login{
       background: #ee580f;
      color: #fff;
      border-radius: 5px;
@@ -304,8 +304,8 @@ button {
      
 }
 
-.botao_vazis:hover,
-.botao_vazis:focus {
+.botao_login:hover,
+.botao_login:focus {
      background: #000;
      border: solid #000 2px;
      color: #fff;
