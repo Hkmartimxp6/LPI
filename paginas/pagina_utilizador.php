@@ -38,6 +38,7 @@ if (isset($_SESSION["utilizador"])) {
                 printDadosPessoais();
                 printGestaoBilhetes();
                 printGestaoUtilizadores();
+                printGestaoCarteira();
                 printGestaoRotas();
                 echo "</div>";
                 break;
@@ -45,6 +46,7 @@ if (isset($_SESSION["utilizador"])) {
             case FUNCIONARIO: // funcionario
                 echo "<div id='corpo'>";
                 printDadosPessoais();
+                printGestaoCarteira();
                 printGestaoBilhetes();
                 echo "</div>";
                 break;
@@ -52,6 +54,7 @@ if (isset($_SESSION["utilizador"])) {
             case CLIENTE: // cliente
                 echo "<div id='corpo'>";
                 printGestaoBilhetes();
+                printGestaoCarteira();
                 printDadosPessoais();
                 echo "</div>";
                 break;
