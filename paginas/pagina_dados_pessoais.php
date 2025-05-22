@@ -11,9 +11,9 @@ if (!isset($_SESSION['utilizador'])) {
 }
 
 // Obter dados do utilizador da base de dados
-$username = $_SESSION['utilizador'];
-$stmt = $conn->prepare("SELECT * FROM utilizador WHERE username = ?");
-$stmt->bind_param("s", $username);
+$username = $_SESSION['utilizador']; 
+$stmt = $conn->prepare("SELECT * FROM utilizador WHERE nome_utilizador = ?");
+$stmt->bind_param("s", $username); 
 $stmt->execute();
 $result = $stmt->get_result();
 $userData = $result->fetch_assoc();
@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['atualizar'])) {
     $morada = mysqli_real_escape_string($conn, $_POST['morada']);
     $codigo_postal = mysqli_real_escape_string($conn, $_POST['codigo_postal']);
     $cidade = mysqli_real_escape_string($conn, $_POST['cidade']);
-    
+
     // Atualizar na base de dados com prepared statement
     $stmt = $conn->prepare("UPDATE utilizador SET 
                           nome = ?, 
@@ -36,9 +36,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['atualizar'])) {
                           morada = ?,
                           codigo_postal = ?,
                           cidade = ?
-                          WHERE username = ?");
+                          WHERE nome_utilizador = ?");
     $stmt->bind_param("sssssss", $nome, $email, $telefone, $morada, $codigo_postal, $cidade, $username);
-    
+
     if ($stmt->execute()) {
         $mensagem = "Dados atualizados com sucesso!";
         // Atualizar dados locais
@@ -62,13 +62,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['atualizar'])) {
     <link rel="stylesheet" href="bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="responsive.css">
-    <style>
-        /* [Mantido todo o CSS original] */
-    </style>
 </head>
 <body class="main-layout">
-    <!-- Header inclui logo e menu de navegação -->
-    <?php include "header.php"; ?>
 
     <!-- Conteúdo Principal -->
     <div class="profile-container">
@@ -86,10 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['atualizar'])) {
                     <div class="profile-card">
                         <div class="profile-header">
                             <div class="text-center">
-                                <div class="profile-avatar mx-auto">
-                                    <?php echo strtoupper(substr($userData['nome'] ?? 'U', 0, 1)); ?>
-                                </div>
-                                <h2>Bem-vindo, <?php echo $userData['nome'] ?? $username; ?></h2>
+                                <h2>Bem-vindo, <?php echo $userData['nome_utilizador']; ?></h2>
                             </div>
                         </div>
                         
@@ -155,8 +147,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['atualizar'])) {
                                     </div>
                                 </form>
                             </div>
-                            
-                            <!-- [Restante do código mantido igual...] -->
+
+                            <!-- [Outras abas e conteúdos, se houver...] -->
+
                         </div>
                     </div>
                 </div>
@@ -164,15 +157,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['atualizar'])) {
         </div>
     </div>
 
-    <!-- Footer -->
-    <?php include "footer.php"; ?>
-
     <!-- JavaScript Files -->
     <script src="jquery.min.js"></script>
     <script src="bootstrap.bundle.min.js"></script>
     <script>
         function openTab(tabId) {
-            // [Código JavaScript mantido igual]
+            var contents = document.querySelectorAll('.tab-content');
+            var buttons = document.querySelectorAll('.tab-button');
+            contents.forEach(c => c.classList.remove('active'));
+            buttons.forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
         }
     </script>
 </body>
