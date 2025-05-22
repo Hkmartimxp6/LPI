@@ -33,32 +33,31 @@ if (isset($_SESSION["utilizador"])) {
                 <form action='index.php'><input type='submit' value='Página Principal'></form>
             </div>
             <div id='botao'>
-                <form action='../contatos.php'><input type='submit' value='Contactos'></form>
+                <form action='contatos.php'><input type='submit' value='Contactos'></form>
             </div>
         </div>
       </div>";
 
         switch ($row["tipo_utilizador"]) {
-            case 1: // admin
+            case ADMINISTRADOR: // admin
                 echo "<div id='corpo'>";
                 printDadosPessoais();
-                printGestãoReservas();
-                printGestãoUtilizadores();
-                printGestãoCabanas();
+                printGestaoBilhetes();
+                printGestaoUtilizadores();
+                printGestaoRotas();
                 echo "</div>";
                 break;
 
-            case 2: // funcionario
+            case FUNCIONARIO: // funcionario
                 echo "<div id='corpo'>";
                 printDadosPessoais();
-                printGestãoReservas();
+                printGestaoBilhetes();
                 echo "</div>";
                 break;
 
-            case 3: // cliente
+            case CLIENTE: // cliente
                 echo "<div id='corpo'>";
-                printContactos();
-                printGestãoReservas();
+                printGestaoBilhetes();
                 printDadosPessoais();
                 echo "</div>";
                 break;
@@ -70,19 +69,10 @@ if (isset($_SESSION["utilizador"])) {
     echo "<script>setTimeout(function(){ window.location.href = 'logout.php'; }, 0)</script>";
 }
 
-function printContactos()
+function printGestaoBilhetes()
 {
     echo "<div class='botaoCorpo'>
-            <form action='../contatos.php'>
-                <input type='submit' value='Contactos' id='btCorpo'>
-            </form>
-          </div>";
-}
-
-function printGestãoCabanas()
-{
-    echo "<div class='botaoCorpo'>
-            <form action='../Cabanas/PgGestCabanas.php'>
+            <form action='pagina_dados_pessoais.php'>
                 <input type='submit' value='Gestão Cabanas' id='btCorpo'>
             </form>
           </div>";
@@ -91,34 +81,34 @@ function printGestãoCabanas()
 function printDadosPessoais()
 {
     echo "<div class='botaoCorpo'>
-            <form action='DadosPessoais.php'>
+            <form action='pagina_dados_pessoais.php'>
                 <input type='submit' value='Dados Pessoais' id='btCorpo'>
             </form>
           </div>";
 }
 
-function printGestãoQuotas()
+function printGestaoCarteira()
 {
     echo "<div class='botaoCorpo'>
-            <form action='PgQuotas.php'>
+            <form action='pagina_gestao_carteira.php'>
                 <input type='submit' value='Gestão Quotas' id='btCorpo'>
             </form>
           </div>";
 }
 
-function printGestãoReservas()
+function printGestaoRotas()
 {
     echo "<div class='botaoCorpo'>
-            <form action='../Reserva/PgGestReservas.php'>
+            <form action='pagina_gestap_rotas.php'>
                 <input type='submit' value='Gestão Reservas' id='btCorpo'>
             </form>
           </div>";
 }
 
-function printGestãoUtilizadores()
+function printGestaoUtilizadores()
 {
     echo "<div class='botaoCorpo'>
-            <form action='PgGestUtilizadores.php'>
+            <form action='pagina_gestao_utilizadores.php'>
                 <input type='submit' value='Gestão Utilizadores' id='btCorpo'>
             </form>
           </div>";
