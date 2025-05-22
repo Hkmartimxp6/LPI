@@ -73,7 +73,7 @@ function printGestaoBilhetes()
 {
     echo "<div class='botaoCorpo'>
             <form action='pagina_dados_pessoais.php'>
-                <input type='submit' value='Gestão Cabanas' id='btCorpo'>
+                <input type='submit' value='Gestão Bilhetes' id='btCorpo'>
             </form>
           </div>";
 }
@@ -91,7 +91,7 @@ function printGestaoCarteira()
 {
     echo "<div class='botaoCorpo'>
             <form action='pagina_gestao_carteira.php'>
-                <input type='submit' value='Gestão Quotas' id='btCorpo'>
+                <input type='submit' value='Gestão Carteira' id='btCorpo'>
             </form>
           </div>";
 }
@@ -100,7 +100,7 @@ function printGestaoRotas()
 {
     echo "<div class='botaoCorpo'>
             <form action='pagina_gestap_rotas.php'>
-                <input type='submit' value='Gestão Reservas' id='btCorpo'>
+                <input type='submit' value='Gestão Rotas' id='btCorpo'>
             </form>
           </div>";
 }
