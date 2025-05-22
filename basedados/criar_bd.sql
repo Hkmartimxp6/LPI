@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 19, 2025 at 08:15 PM
+-- Generation Time: May 22, 2025 at 10:54 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -81,6 +81,16 @@ CREATE TABLE `carteira` (
   `saldo` decimal(65,3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `carteira`
+--
+
+INSERT INTO `carteira` (`id_carteira`, `saldo`) VALUES
+(1, 0.000),
+(2, 0.000),
+(3, 0.000),
+(4, 0.000);
+
 -- --------------------------------------------------------
 
 --
@@ -103,6 +113,30 @@ CREATE TABLE `localidade` (
   `id_localidade` int(100) NOT NULL,
   `localidade` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `localidade`
+--
+
+INSERT INTO `localidade` (`id_localidade`, `localidade`) VALUES
+(1, 'Aveiro'),
+(2, 'Beja'),
+(3, 'Braga'),
+(4, 'Bragança'),
+(5, 'Castelo Branco'),
+(6, 'Coimbra'),
+(7, 'Évora'),
+(8, 'Faro'),
+(9, 'Guarda'),
+(10, 'Leiria'),
+(11, 'Lisboa'),
+(12, 'Portalegre'),
+(13, 'Porto'),
+(14, 'Santarém'),
+(15, 'Setúbal'),
+(16, 'Viana do Castelo'),
+(17, 'Vila Real'),
+(18, 'Viseu');
 
 -- --------------------------------------------------------
 
@@ -163,8 +197,20 @@ CREATE TABLE `utilizador` (
   `morada` varchar(40) DEFAULT NULL,
   `telemovel` varchar(20) DEFAULT NULL,
   `tipo_utilizador` int(100) NOT NULL,
-  `id_carteira_utilizador` int(100) NOT NULL
+  `id_carteira` int(100) NOT NULL,
+  `email` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `utilizador`
+--
+
+INSERT INTO `utilizador` (`id_utilizador`, `password`, `nome_utilizador`, ` nome`, `morada`, `telemovel`, `tipo_utilizador`, `id_carteira`, `email`) VALUES
+(1, '21232f297a57a5a743894a0e4a801fc3', 'admin', NULL, NULL, NULL, 1, 1, ''),
+(15, 'cc7a84634199040d54376793842fe035', 'funcionario', NULL, NULL, NULL, 2, 1, ''),
+(16, '4983a0ab83ed86e0e7213c8783940193', 'cliente', NULL, NULL, NULL, 3, 2, ''),
+(17, '34b7da764b21d298ef307d04d8152dc5', 'tom', NULL, NULL, NULL, 3, 3, ''),
+(18, 'd39c73f590d2ad95763720f728258cdd', 'martim', NULL, NULL, NULL, 3, 4, 'martim@ipcb.pt');
 
 -- --------------------------------------------------------
 
@@ -173,9 +219,9 @@ CREATE TABLE `utilizador` (
 --
 
 CREATE TABLE `viagem` (
-  `id_viagem` int(11) NOT NULL,
-  `id_rota` int(11) NOT NULL,
-  `id_autocarro` int(11) NOT NULL,
+  `id_viagem` int(100) NOT NULL,
+  `id_rota` int(100) NOT NULL,
+  `id_autocarro` int(100) NOT NULL,
   `data` date NOT NULL,
   `hora` time NOT NULL,
   `preco` double NOT NULL
@@ -258,8 +304,8 @@ ALTER TABLE `utilizador`
   ADD PRIMARY KEY (`id_utilizador`),
   ADD UNIQUE KEY `nome_utilizador` (`nome_utilizador`),
   ADD KEY `tipo_utilizador` (`tipo_utilizador`),
-  ADD KEY `id_carteira` (`id_carteira_utilizador`),
-  ADD KEY `id_carteira_utilizador` (`id_carteira_utilizador`);
+  ADD KEY `id_carteira` (`id_carteira`),
+  ADD KEY `id_carteira_utilizador` (`id_carteira`);
 
 --
 -- Indexes for table `viagem`
@@ -295,13 +341,13 @@ ALTER TABLE `bilhete`
 -- AUTO_INCREMENT for table `carteira`
 --
 ALTER TABLE `carteira`
-  MODIFY `id_carteira` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20250003;
+  MODIFY `id_carteira` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2025000004;
 
 --
 -- AUTO_INCREMENT for table `localidade`
 --
 ALTER TABLE `localidade`
-  MODIFY `id_localidade` int(100) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_localidade` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `operacao`
@@ -325,13 +371,13 @@ ALTER TABLE `tipo_utilizador`
 -- AUTO_INCREMENT for table `utilizador`
 --
 ALTER TABLE `utilizador`
-  MODIFY `id_utilizador` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_utilizador` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `viagem`
 --
 ALTER TABLE `viagem`
-  MODIFY `id_viagem` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_viagem` int(100) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
@@ -352,15 +398,10 @@ ALTER TABLE `bilhete`
   ADD CONSTRAINT `id_viagem_fk` FOREIGN KEY (`id_viagem`) REFERENCES `viagem` (`id_viagem`);
 
 --
--- Constraints for table `carteira`
---
-ALTER TABLE `carteira`
-  ADD CONSTRAINT `carteira_ibfk_1` FOREIGN KEY (`id_carteira`) REFERENCES `carteira_log` (`id_carteira`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
 -- Constraints for table `carteira_log`
 --
 ALTER TABLE `carteira_log`
+  ADD CONSTRAINT `carteira_log_ibfk_1` FOREIGN KEY (`id_carteira`) REFERENCES `carteira` (`id_carteira`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `id_operacao_fk` FOREIGN KEY (`id_operacao`) REFERENCES `operacao` (`id_operacao`);
 
 --
@@ -374,7 +415,7 @@ ALTER TABLE `rota`
 -- Constraints for table `utilizador`
 --
 ALTER TABLE `utilizador`
-  ADD CONSTRAINT `id_carteira_fk` FOREIGN KEY (`id_carteira_utilizador`) REFERENCES `carteira` (`id_carteira`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `id_carteira_fk` FOREIGN KEY (`id_carteira`) REFERENCES `carteira` (`id_carteira`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `tipo_utilizador_fk` FOREIGN KEY (`tipo_utilizador`) REFERENCES `tipo_utilizador` (`id_tipo_utilizador`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --

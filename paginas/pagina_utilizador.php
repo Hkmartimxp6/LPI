@@ -1,154 +1,117 @@
-<html>
-<body>  
-	
-	<?php	
-		session_start();
-		
-		if(isset($_SESSION["utilizador"])){
-			
-				
-			$user = $_SESSION["utilizador"];
-			unset($_SESSION);
-			$_SESSION["utilizador"] = $user;
-						
-			// ===============================================================
-			include '../base_dados/basedados.h';
-			include "utilizadores.php";
-			//Selecionar user correspondente da base de dados
-			$sql = "SELECT * FROM utilizador WHERE nome_utilizador = '".$_SESSION["utilizador"]."'";
-			$retval = mysqli_query( $conn, $sql );
-			if(! $retval ){
-				die('Could not get data: ' . mysqli_error($conn));// se não funcionar dá erro
-			}
-			$row = mysqli_fetch_array($retval);
-			
-			if($row["tipoUtilizador"]!=CLIENTE_NAO_VALIDO && $row["tipoUtilizador"]!=CLIENTE_APAGADO){
-				// ===============================================================
-				
-				echo"<div id='cabecalho'>
-						<a href='../pagina_inicial.php'>
-							<div id='logo'>
-							</div>
-						</a>
-							<img src = '../../media/imgs_utilizadores/".$row['imagem']."' width=100 height = 100 id=img>
-						<div class= 'input-div'>
-							<div id='botao'>
-								<form action='logout.php'>
-									<input type='submit' value='Logout'>
-								</form>
-							</div>
-							<div id='botao'>
-								<form action='../pagina_inicial.php'>
-									<input type='submit' value='Página Principal'>
-								</form>
-							</div>
-							<div id='botao'>
-							  <form action='../contatos.php'>
-								<input type='submit' value='Contactos'>
-							  </form>
-							</div>
-						</div>
-					</div>";
-				
-				//PERSONALIZAÇÃO
-				switch($row["tipoUtilizador"]){
-						
-					case ADMINISTRADOR:
-						//==============================ADMINISTRADOR===============================//
-						echo "<div id='corpo'>";
-						printDadosPessoais();
-						printGestãoReservas();
-						printGestãoUtilizadores();
-						printGestãoCabanas();
-						echo"</div>";
-					break;
-					
-					case FUNCIONARIO:
-						//===============================FUNCIONARIO================================//
-						echo "<div id='corpo'>";
-						printDadosPessoais();
-						printGestãoReservas();
-						echo"</div>";
-					break;
-						
-					case CLIENTE:
-						//=================================CLIENTE==================================//
-						echo "<div id='corpo'>";
-						printContactos();
-						printGestãoReservas();
-						printDadosPessoais();
-						echo"</div>";
-					break;
-					
-				}
-				
-			}else{
-				echo "<script>setTimeout(function(){ window.location.href = 'logout.php'; }, 0)</script>";
-			}
-			
-		}else
-			echo "<script>setTimeout(function(){ window.location.href = 'logout.php'; }, 0)</script>";
-			
-		function printContactos(){
-			//Contactos
-			echo 
-			"<div class='botaoCorpo'>
-				<form action='../contatos.php'>
-					<input type='submit' value='Contactos' id='btCorpo'>
-				</form>
-			</div>";
-			
-		}
-		
-		function printGestãoCabanas(){
-			//Contactos
-			echo 
-			"<div class='botaoCorpo'>
-				<form action='../Cabanas/PgGestCabanas.php'>
-					<input type='submit' value='Gestão Cabanas' id='btCorpo'>
-				</form>
-			</div>";
-			
-		}
-		
-		function printDadosPessoais(){
-			//Dados Pessoais
-			echo
-			"<div class='botaoCorpo'>
-				<form action= 'DadosPessoais.php'>
-					<input type='submit' value='Dados Pessoais' id='btCorpo'>
-				</form>
-			</div>";
-		}
+<?php
+session_start();
 
-		function printGestãoQuotas(){
-			//Quotas
-			echo 
-			"<div class='botaoCorpo'>
-				<form action='PgQuotas.php'>
-					<input type='submit' value='Gestão Quotas' id='btCorpo'>
-				</form>
-			</div>";
-		}
-		
-		function printGestãoReservas(){
-			//Gestão Reservas
-			echo
-			"<div class='botaoCorpo'>
-				<form action='../Reserva/PgGestReservas.php'>
-					<input type='submit' value='Gestão Reservas' id='btCorpo'>
-				</form>
-			</div>";
-		}
-		
-		function printGestãoUtilizadores(){
-			//Gestão Utilizadores
-			echo 
-			"<div class='botaoCorpo'>
-				<form action='PgGestUtilizadores.php'>
-					<input type='submit' value='Gestão Utilizadores' id='btCorpo'>
-				</form>
-			</div>";
-		}
-	?>
-</body>
+if (isset($_SESSION["utilizador"])) {
+
+    $user = $_SESSION["utilizador"];
+    unset($_SESSION);
+    $_SESSION["utilizador"] = $user;
+
+    include "../basedados/basedados.h";
+    include "utilizadores.php";
+
+    $sql = "SELECT * FROM utilizador WHERE nome_utilizador = '" . $_SESSION["utilizador"] . "'";
+    $retval = mysqli_query($conn, $sql);
+
+    if (!$retval) {
+        die('Erro ao obter dados: ' . mysqli_error($conn));
+    }
+
+    $row = mysqli_fetch_array($retval);
+
+    if ($row["tipo_utilizador"] != 4 && $row["tipo_utilizador"] != 5) {
+
+        echo "<div id='cabecalho'>
+        <div class='logo'>
+            <a href='index.php'><img src='logo.png' style='width:300px;' alt='#'></a>
+        </div>
+        <div class='input-div'>
+            <div id='botao'>
+                <form action='index.php'><input type='submit' value='Página Principal'></form>
+            </div>
+        </div>
+      </div>";
+
+        switch ($row["tipo_utilizador"]) {
+            case ADMINISTRADOR: // admin
+                echo "<div id='corpo'>";
+                printDadosPessoais();
+                printGestaoBilhetes();
+                printGestaoUtilizadores();
+                printGestaoCarteira();
+                printGestaoRotas();
+                echo "</div>";
+                break;
+
+            case FUNCIONARIO: // funcionario
+                echo "<div id='corpo'>";
+                printDadosPessoais();
+                printGestaoCarteira();
+                printGestaoBilhetes();
+                echo "</div>";
+                break;
+
+            case CLIENTE: // cliente
+                echo "<div id='corpo'>";
+                printGestaoBilhetes();
+                printGestaoCarteira();
+                printDadosPessoais();
+                echo "</div>";
+                break;
+        }
+
+        echo "
+            <div id='botao'>
+                <form action='logout.php'><input type='submit' value='Logout'></form>
+            </div>";
+    } else {
+        echo "<script>setTimeout(function(){ window.location.href = 'logout.php'; }, 0)</script>";
+    }
+} else {
+    echo "<script>setTimeout(function(){ window.location.href = 'logout.php'; }, 0)</script>";
+}
+
+function printGestaoBilhetes()
+{
+    echo "<div class='botaoCorpo'>
+            <form action='pagina_dados_pessoais.php'>
+                <input type='submit' value='Gestão Bilhetes' id='btCorpo'>
+            </form>
+          </div>";
+}
+
+function printDadosPessoais()
+{
+    echo "<div class='botaoCorpo'>
+            <form action='pagina_dados_pessoais.php'>
+                <input type='submit' value='Dados Pessoais' id='btCorpo'>
+            </form>
+          </div>";
+}
+
+function printGestaoCarteira()
+{
+    echo "<div class='botaoCorpo'>
+            <form action='pagina_gestao_carteira.php'>
+                <input type='submit' value='Gestão Carteira' id='btCorpo'>
+            </form>
+          </div>";
+}
+
+function printGestaoRotas()
+{
+    echo "<div class='botaoCorpo'>
+            <form action='pagina_gestap_rotas.php'>
+                <input type='submit' value='Gestão Rotas' id='btCorpo'>
+            </form>
+          </div>";
+}
+
+function printGestaoUtilizadores()
+{
+    echo "<div class='botaoCorpo'>
+            <form action='pagina_gestao_utilizadores.php'>
+                <input type='submit' value='Gestão Utilizadores' id='btCorpo'>
+            </form>
+          </div>";
+}
