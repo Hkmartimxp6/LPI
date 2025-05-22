@@ -27,13 +27,7 @@ if (isset($_SESSION["utilizador"])) {
         </div>
         <div class='input-div'>
             <div id='botao'>
-                <form action='logout.php'><input type='submit' value='Logout'></form>
-            </div>
-            <div id='botao'>
                 <form action='index.php'><input type='submit' value='Página Principal'></form>
-            </div>
-            <div id='botao'>
-                <form action='contatos.php'><input type='submit' value='Contactos'></form>
             </div>
         </div>
       </div>";
@@ -62,6 +56,11 @@ if (isset($_SESSION["utilizador"])) {
                 echo "</div>";
                 break;
         }
+
+        echo "
+            <div id='botao'>
+                <form action='logout.php'><input type='submit' value='Logout'></form>
+            </div>";
     } else {
         echo "<script>setTimeout(function(){ window.location.href = 'logout.php'; }, 0)</script>";
     }
