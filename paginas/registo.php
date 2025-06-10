@@ -2,34 +2,43 @@
 <html lang="en">
 
 <head>
-    <!-- basic -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <!-- mobile metas -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
-    <!-- site metas -->
-    <title>Felix Bus</title>
-    <meta name="keywords" content="">
+    <title>Felix Bus - Registo</title> <meta name="keywords" content="">
     <meta name="description" content="">
     <meta name="author" content="">
-    <!-- bootstrap css -->
     <link rel="stylesheet" href="bootstrap.min.css">
-    <!-- style css -->
     <link rel="stylesheet" href="style.css">
-    <!-- Responsive-->
     <link rel="stylesheet" href="responsive.css">
-    <!-- fevicon -->
     <link rel="icon" href="fevicon.png" type="image/gif" />
-    <!-- Scrollbar Custom CSS -->
     <link rel="stylesheet" href="jquery.mCustomScrollbar.min.css">
-    <!-- Tweaks for older IEs-->
-    <!-- owl stylesheets -->
     <link rel="stylesheet" href="owl.carousel.min.css">
     <link rel="stylesheet" href="owl.theme.default.min.css">
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+    <style>
+        /* Estilos adicionais para o layout */
+        @media (min-width: 768px) {
+            .gradient-form {
+                height: 100vh !important;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .gradient-custom-2 {
+                border-top-right-radius: .3rem;
+                border-bottom-right-radius: .3rem;
+            }
+        }
+        /* O gradiente 'gradient-custom-2' é esperado no seu ficheiro style.css ou em outro local */
+        /* Se não estiver, por favor, adicione-o ao seu style.css:
+        .gradient-custom-2 {
+            background: #fccb90;
+            background: -webkit-linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);
+            background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);
+        }
+        */
+    </style>
 </head>
 
 <body>
@@ -45,6 +54,21 @@
                                         <img src="logo.png" class="img-fluid" style="width: 185px;" alt="logo">
                                     </div>
                                     <form action="criar_registo.php" method="post">
+                                        <label class="form-label" for="nome">Nome</label>
+                                        <div class="form-outline mb-4">
+                                            <input type="text" id="nome" class="form-control" placeholder="O seu nome" name="nome" required />
+                                        </div>
+
+                                        <label class="form-label" for="morada">Morada</label>
+                                        <div class="form-outline mb-4">
+                                            <input type="text" id="morada" class="form-control" placeholder="A sua morada" name="morada" required />
+                                        </div>
+
+                                        <label class="form-label" for="telemovel">Telemóvel</label>
+                                        <div class="form-outline mb-4">
+                                            <input type="tel" id="telemovel" class="form-control" placeholder="O seu número de telemóvel" name="telemovel" required />
+                                        </div>
+
                                         <label class="form-label" for="utilizador_registo">Utilizador</label>
                                         <div class="form-outline mb-4">
                                             <input type="text" id="utilizador_registo" class="form-control" placeholder="O seu nome de utilizador" name="utilizador_registo" required />

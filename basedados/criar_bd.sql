@@ -214,7 +214,7 @@ CREATE TABLE `utilizador` (
   `id_utilizador` int(100) NOT NULL,
   `password` varchar(500) NOT NULL,
   `nome_utilizador` varchar(20) NOT NULL,
-  ` nome` varchar(20) DEFAULT NULL,
+  `nome` varchar(20) DEFAULT NULL,
   `morada` varchar(40) DEFAULT NULL,
   `telemovel` varchar(20) DEFAULT NULL,
   `tipo_utilizador` int(100) NOT NULL,
@@ -226,7 +226,7 @@ CREATE TABLE `utilizador` (
 -- Extraindo dados da tabela `utilizador`
 --
 
-INSERT INTO `utilizador` (`id_utilizador`, `password`, `nome_utilizador`, ` nome`, `morada`, `telemovel`, `tipo_utilizador`, `id_carteira`, `email`) VALUES
+INSERT INTO `utilizador` (`id_utilizador`, `password`, `nome_utilizador`, `nome`, `morada`, `telemovel`, `tipo_utilizador`, `id_carteira`, `email`) VALUES
 (1, '21232f297a57a5a743894a0e4a801fc3', 'admin', NULL, NULL, NULL, 1, 1, ''),
 (15, 'cc7a84634199040d54376793842fe035', 'funcionario', NULL, NULL, NULL, 2, 1, ''),
 (16, '4983a0ab83ed86e0e7213c8783940193', 'cliente', NULL, NULL, NULL, 3, 2, ''),
