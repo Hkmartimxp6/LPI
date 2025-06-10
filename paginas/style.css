@@ -2380,3 +2380,23 @@ border-bottom-right-radius: .3rem;
 height: 5;
 }
 }
+
+.input-overlay-container {
+    position: relative;
+    width: 100%;
+}
+
+.input-overlay-container .form-control {
+    padding-right: 35px;
+}
+
+.input-overlay-icon {
+    position: absolute;
+    right: 10px;
+    top: 60%;
+    transform: translateY(0%);
+    color: #888;
+    pointer-events: none;
+    z-index: 2;
+    font-size: 1.1em;
+}
