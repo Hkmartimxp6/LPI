@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 22, 2025 at 10:54 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Tempo de geração: 10-Jun-2025 às 02:24
+-- Versão do servidor: 10.4.32-MariaDB
+-- versão do PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `felixbus`
+-- Banco de dados: `felixbus`
 --
 CREATE DATABASE IF NOT EXISTS `felixbus` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `felixbus`;
@@ -26,7 +26,7 @@ USE `felixbus`;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `alerta`
+-- Estrutura da tabela `alerta`
 --
 
 CREATE TABLE `alerta` (
@@ -37,7 +37,7 @@ CREATE TABLE `alerta` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `alerta_utilizador`
+-- Estrutura da tabela `alerta_utilizador`
 --
 
 CREATE TABLE `alerta_utilizador` (
@@ -49,7 +49,7 @@ CREATE TABLE `alerta_utilizador` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `autocarro`
+-- Estrutura da tabela `autocarro`
 --
 
 CREATE TABLE `autocarro` (
@@ -58,10 +58,19 @@ CREATE TABLE `autocarro` (
   `nome_motorista` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Extraindo dados da tabela `autocarro`
+--
+
+INSERT INTO `autocarro` (`id_autocarro`, `lugares`, `nome_motorista`) VALUES
+(1, 65, 'Manel Manobras'),
+(2, 65, 'Ernesto Pirilampo'),
+(3, 65, 'Pedro Pladour');
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `bilhete`
+-- Estrutura da tabela `bilhete`
 --
 
 CREATE TABLE `bilhete` (
@@ -73,7 +82,7 @@ CREATE TABLE `bilhete` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `carteira`
+-- Estrutura da tabela `carteira`
 --
 
 CREATE TABLE `carteira` (
@@ -82,7 +91,7 @@ CREATE TABLE `carteira` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `carteira`
+-- Extraindo dados da tabela `carteira`
 --
 
 INSERT INTO `carteira` (`id_carteira`, `saldo`) VALUES
@@ -94,7 +103,7 @@ INSERT INTO `carteira` (`id_carteira`, `saldo`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `carteira_log`
+-- Estrutura da tabela `carteira_log`
 --
 
 CREATE TABLE `carteira_log` (
@@ -106,7 +115,7 @@ CREATE TABLE `carteira_log` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `localidade`
+-- Estrutura da tabela `localidade`
 --
 
 CREATE TABLE `localidade` (
@@ -115,7 +124,7 @@ CREATE TABLE `localidade` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `localidade`
+-- Extraindo dados da tabela `localidade`
 --
 
 INSERT INTO `localidade` (`id_localidade`, `localidade`) VALUES
@@ -141,7 +150,7 @@ INSERT INTO `localidade` (`id_localidade`, `localidade`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `operacao`
+-- Estrutura da tabela `operacao`
 --
 
 CREATE TABLE `operacao` (
@@ -152,7 +161,7 @@ CREATE TABLE `operacao` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `rota`
+-- Estrutura da tabela `rota`
 --
 
 CREATE TABLE `rota` (
@@ -161,10 +170,22 @@ CREATE TABLE `rota` (
   `id_destino` int(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Extraindo dados da tabela `rota`
+--
+
+INSERT INTO `rota` (`id_rota`, `id_origem`, `id_destino`) VALUES
+(1, 15, 9),
+(2, 10, 13),
+(3, 3, 18),
+(4, 9, 15),
+(5, 13, 10),
+(6, 18, 3);
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tipo_utilizador`
+-- Estrutura da tabela `tipo_utilizador`
 --
 
 CREATE TABLE `tipo_utilizador` (
@@ -173,7 +194,7 @@ CREATE TABLE `tipo_utilizador` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tipo_utilizador`
+-- Extraindo dados da tabela `tipo_utilizador`
 --
 
 INSERT INTO `tipo_utilizador` (`id_tipo_utilizador`, `descricao`) VALUES
@@ -186,7 +207,7 @@ INSERT INTO `tipo_utilizador` (`id_tipo_utilizador`, `descricao`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `utilizador`
+-- Estrutura da tabela `utilizador`
 --
 
 CREATE TABLE `utilizador` (
@@ -202,7 +223,7 @@ CREATE TABLE `utilizador` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `utilizador`
+-- Extraindo dados da tabela `utilizador`
 --
 
 INSERT INTO `utilizador` (`id_utilizador`, `password`, `nome_utilizador`, ` nome`, `morada`, `telemovel`, `tipo_utilizador`, `id_carteira`, `email`) VALUES
@@ -215,7 +236,7 @@ INSERT INTO `utilizador` (`id_utilizador`, `password`, `nome_utilizador`, ` nome
 -- --------------------------------------------------------
 
 --
--- Table structure for table `viagem`
+-- Estrutura da tabela `viagem`
 --
 
 CREATE TABLE `viagem` (
@@ -223,35 +244,48 @@ CREATE TABLE `viagem` (
   `id_rota` int(100) NOT NULL,
   `id_autocarro` int(100) NOT NULL,
   `data` date NOT NULL,
+  `hora_chegada` time NOT NULL,
   `hora` time NOT NULL,
   `preco` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Indexes for dumped tables
+-- Extraindo dados da tabela `viagem`
+--
+
+INSERT INTO `viagem` (`id_viagem`, `id_rota`, `id_autocarro`, `data`, `hora_chegada`, `hora`, `preco`) VALUES
+(1, 1, 1, '2025-06-15', '16:45:00', '15:00:00', 15),
+(2, 2, 2, '2025-06-16', '17:30:00', '15:00:00', 15),
+(3, 3, 3, '2025-06-18', '22:00:00', '19:00:00', 16),
+(4, 4, 1, '2025-06-19', '12:00:00', '09:00:00', 15),
+(5, 5, 2, '2025-06-18', '22:45:00', '21:00:00', 17),
+(6, 6, 3, '2025-06-27', '00:30:00', '22:00:00', 20);
+
+--
+-- Índices para tabelas despejadas
 --
 
 --
--- Indexes for table `alerta`
+-- Índices para tabela `alerta`
 --
 ALTER TABLE `alerta`
   ADD PRIMARY KEY (`id_alerta`);
 
 --
--- Indexes for table `alerta_utilizador`
+-- Índices para tabela `alerta_utilizador`
 --
 ALTER TABLE `alerta_utilizador`
   ADD KEY `id_utilizador` (`id_utilizador`,`id_alerta`),
   ADD KEY `id_alerta_fk` (`id_alerta`);
 
 --
--- Indexes for table `autocarro`
+-- Índices para tabela `autocarro`
 --
 ALTER TABLE `autocarro`
   ADD PRIMARY KEY (`id_autocarro`);
 
 --
--- Indexes for table `bilhete`
+-- Índices para tabela `bilhete`
 --
 ALTER TABLE `bilhete`
   ADD PRIMARY KEY (`id_bilhete`),
@@ -259,32 +293,32 @@ ALTER TABLE `bilhete`
   ADD KEY `id_utilizador` (`id_utilizador`);
 
 --
--- Indexes for table `carteira`
+-- Índices para tabela `carteira`
 --
 ALTER TABLE `carteira`
   ADD PRIMARY KEY (`id_carteira`);
 
 --
--- Indexes for table `carteira_log`
+-- Índices para tabela `carteira_log`
 --
 ALTER TABLE `carteira_log`
   ADD KEY `id_carteira` (`id_carteira`,`id_operacao`),
   ADD KEY `id_operacao_fk` (`id_operacao`);
 
 --
--- Indexes for table `localidade`
+-- Índices para tabela `localidade`
 --
 ALTER TABLE `localidade`
   ADD PRIMARY KEY (`id_localidade`);
 
 --
--- Indexes for table `operacao`
+-- Índices para tabela `operacao`
 --
 ALTER TABLE `operacao`
   ADD PRIMARY KEY (`id_operacao`);
 
 --
--- Indexes for table `rota`
+-- Índices para tabela `rota`
 --
 ALTER TABLE `rota`
   ADD PRIMARY KEY (`id_rota`),
@@ -292,13 +326,13 @@ ALTER TABLE `rota`
   ADD KEY `id_destino` (`id_destino`);
 
 --
--- Indexes for table `tipo_utilizador`
+-- Índices para tabela `tipo_utilizador`
 --
 ALTER TABLE `tipo_utilizador`
   ADD PRIMARY KEY (`id_tipo_utilizador`);
 
 --
--- Indexes for table `utilizador`
+-- Índices para tabela `utilizador`
 --
 ALTER TABLE `utilizador`
   ADD PRIMARY KEY (`id_utilizador`),
@@ -308,7 +342,7 @@ ALTER TABLE `utilizador`
   ADD KEY `id_carteira_utilizador` (`id_carteira`);
 
 --
--- Indexes for table `viagem`
+-- Índices para tabela `viagem`
 --
 ALTER TABLE `viagem`
   ADD PRIMARY KEY (`id_viagem`),
@@ -316,110 +350,110 @@ ALTER TABLE `viagem`
   ADD KEY `id_autocarro` (`id_autocarro`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT de tabelas despejadas
 --
 
 --
--- AUTO_INCREMENT for table `alerta`
+-- AUTO_INCREMENT de tabela `alerta`
 --
 ALTER TABLE `alerta`
   MODIFY `id_alerta` int(100) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `autocarro`
+-- AUTO_INCREMENT de tabela `autocarro`
 --
 ALTER TABLE `autocarro`
-  MODIFY `id_autocarro` int(100) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_autocarro` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `bilhete`
+-- AUTO_INCREMENT de tabela `bilhete`
 --
 ALTER TABLE `bilhete`
   MODIFY `id_bilhete` int(100) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `carteira`
+-- AUTO_INCREMENT de tabela `carteira`
 --
 ALTER TABLE `carteira`
   MODIFY `id_carteira` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2025000004;
 
 --
--- AUTO_INCREMENT for table `localidade`
+-- AUTO_INCREMENT de tabela `localidade`
 --
 ALTER TABLE `localidade`
   MODIFY `id_localidade` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
--- AUTO_INCREMENT for table `operacao`
+-- AUTO_INCREMENT de tabela `operacao`
 --
 ALTER TABLE `operacao`
   MODIFY `id_operacao` int(100) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `rota`
+-- AUTO_INCREMENT de tabela `rota`
 --
 ALTER TABLE `rota`
-  MODIFY `id_rota` int(100) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_rota` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT for table `tipo_utilizador`
+-- AUTO_INCREMENT de tabela `tipo_utilizador`
 --
 ALTER TABLE `tipo_utilizador`
   MODIFY `id_tipo_utilizador` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `utilizador`
+-- AUTO_INCREMENT de tabela `utilizador`
 --
 ALTER TABLE `utilizador`
   MODIFY `id_utilizador` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
--- AUTO_INCREMENT for table `viagem`
+-- AUTO_INCREMENT de tabela `viagem`
 --
 ALTER TABLE `viagem`
-  MODIFY `id_viagem` int(100) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_viagem` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- Constraints for dumped tables
+-- Restrições para despejos de tabelas
 --
 
 --
--- Constraints for table `alerta_utilizador`
+-- Limitadores para a tabela `alerta_utilizador`
 --
 ALTER TABLE `alerta_utilizador`
   ADD CONSTRAINT `id_alerta_fk` FOREIGN KEY (`id_alerta`) REFERENCES `alerta` (`id_alerta`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `id_utilizador_fk` FOREIGN KEY (`id_utilizador`) REFERENCES `utilizador` (`id_utilizador`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `bilhete`
+-- Limitadores para a tabela `bilhete`
 --
 ALTER TABLE `bilhete`
   ADD CONSTRAINT `id_utilizador` FOREIGN KEY (`id_utilizador`) REFERENCES `utilizador` (`id_utilizador`),
   ADD CONSTRAINT `id_viagem_fk` FOREIGN KEY (`id_viagem`) REFERENCES `viagem` (`id_viagem`);
 
 --
--- Constraints for table `carteira_log`
+-- Limitadores para a tabela `carteira_log`
 --
 ALTER TABLE `carteira_log`
   ADD CONSTRAINT `carteira_log_ibfk_1` FOREIGN KEY (`id_carteira`) REFERENCES `carteira` (`id_carteira`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `id_operacao_fk` FOREIGN KEY (`id_operacao`) REFERENCES `operacao` (`id_operacao`);
 
 --
--- Constraints for table `rota`
+-- Limitadores para a tabela `rota`
 --
 ALTER TABLE `rota`
   ADD CONSTRAINT `id_destino_fk` FOREIGN KEY (`id_destino`) REFERENCES `localidade` (`id_localidade`),
   ADD CONSTRAINT `id_origem_fk` FOREIGN KEY (`id_origem`) REFERENCES `localidade` (`id_localidade`);
 
 --
--- Constraints for table `utilizador`
+-- Limitadores para a tabela `utilizador`
 --
 ALTER TABLE `utilizador`
   ADD CONSTRAINT `id_carteira_fk` FOREIGN KEY (`id_carteira`) REFERENCES `carteira` (`id_carteira`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `tipo_utilizador_fk` FOREIGN KEY (`tipo_utilizador`) REFERENCES `tipo_utilizador` (`id_tipo_utilizador`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `viagem`
+-- Limitadores para a tabela `viagem`
 --
 ALTER TABLE `viagem`
   ADD CONSTRAINT `id_autocaro_fk` FOREIGN KEY (`id_autocarro`) REFERENCES `autocarro` (`id_autocarro`),
