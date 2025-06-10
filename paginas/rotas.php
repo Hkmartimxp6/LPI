@@ -12,75 +12,76 @@ if (isset($_SESSION["utilizador"])) {
     $loggedIn = true;
 }
 
-// 1. Inicializar variáveis de filtro a partir dos parâmetros GET
-// Usamos o operador ?? (null coalescing) para definir uma string vazia se o parâmetro não existir
+// 1. Inicializar variáveis de filtro e ordenação a partir dos parâmetros GET
 $filtro_origem = $_GET['origem'] ?? '';
 $filtro_destino = $_GET['destino'] ?? '';
-$filtro_data = $_GET['data'] ?? '';
 
-// 2. Construir a query SQL dinamicamente
-// Começamos com uma query base e adicionamos condições WHERE se os filtros existirem
+// Novas variáveis para ordenação
+$ordenar_por = $_GET['ordenar_por'] ?? 'origem'; // Padrão: ordenar por origem
+$direcao_ordenacao = $_GET['direcao'] ?? 'ASC'; // Padrão: ascendente
+
+// Validar a direção da ordenação para evitar SQL Injection
+if (!in_array(strtoupper($direcao_ordenacao), ['ASC', 'DESC'])) {
+    $direcao_ordenacao = 'ASC'; // Valor seguro padrão
+}
+
+// 2. Construir a query SQL para buscar rotas
 $sql = "
-    SELECT
-        v.id_viagem,
-        v.data,
-        v.hora,
-        v.hora_chegada, -- ADICIONADO AQUI: Selecionando a nova coluna
-        v.preco,
+    SELECT DISTINCT
+        r.id_rota,
         origem_loc.localidade AS origem,
         destino_loc.localidade AS destino
-    FROM viagem v
-    INNER JOIN rota r ON v.id_rota = r.id_rota
+    FROM rota r
     INNER JOIN localidade origem_loc ON r.id_origem = origem_loc.id_localidade
     INNER JOIN localidade destino_loc ON r.id_destino = destino_loc.id_localidade
     WHERE 1=1
 ";
 
-// Adicionar condições à query se os filtros estiverem preenchidos
+// Adicionar condições de filtro
 if (!empty($filtro_origem)) {
-    // Usar LIKE para pesquisa parcial (correspondência de substring)
-    // Os '%' serão adicionados no bind_param para evitar SQL Injection
     $sql .= " AND origem_loc.localidade LIKE ?";
 }
 if (!empty($filtro_destino)) {
     $sql .= " AND destino_loc.localidade LIKE ?";
 }
-if (!empty($filtro_data)) {
-    // Para datas, geralmente queremos uma correspondência exata
-    $sql .= " AND v.data = ?";
+
+// Adicionar ordenação dinâmica
+$order_clause = "";
+switch ($ordenar_por) {
+    case 'origem':
+        $order_clause = "origem_loc.localidade";
+        break;
+    case 'destino':
+        $order_clause = "destino_loc.localidade";
+        break;
+    default: // Caso padrão se nenhum for especificado ou um valor inválido
+        $order_clause = "origem_loc.localidade"; // Padrão para Origem
+        break;
 }
 
-// Adicionar ordenação
-$sql .= " ORDER BY v.data, v.hora";
+$sql .= " ORDER BY " . $order_clause . " " . $direcao_ordenacao . ", destino_loc.localidade ASC"; // Adiciona ordenação secundária por destino para desempate
 
-// 3. Preparar a query (para segurança contra SQL Injection)
+// 3. Preparar a query
 $stmt = $conn->prepare($sql);
 
 if ($stmt === false) {
     die("Erro na preparação da query: " . $conn->error);
 }
 
-// 4. Ligar os parâmetros (bind_param) aos placeholders (?) na query
+// 4. Ligar os parâmetros (bind_param)
 $params = [];
-$types = ""; // String que define os tipos dos parâmetros ('s' para string, 'i' para int, 'd' para double)
+$types = "";
 
 if (!empty($filtro_origem)) {
-    $params[] = "%" . $filtro_origem . "%"; // Adiciona os '%' aqui, não na query SQL
-    $types .= "s"; // 's' para string
+    $params[] = "%" . $filtro_origem . "%";
+    $types .= "s";
 }
 if (!empty($filtro_destino)) {
     $params[] = "%" . $filtro_destino . "%";
     $types .= "s";
 }
-if (!empty($filtro_data)) {
-    $params[] = $filtro_data;
-    $types .= "s"; // Data é tratada como string pelo prepared statement
-}
 
-// Se houver parâmetros para ligar, faça o bind
 if (!empty($params)) {
-    // A sintaxe `...$params` é o "splat operator" (desde PHP 5.6)
-    // que "desempacota" o array $params como argumentos individuais para bind_param
     $stmt->bind_param($types, ...$params);
 }
 
@@ -99,7 +100,7 @@ $resultado = $stmt->get_result();
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
-    <title>Felix Bus - Viagens</title>
+    <title>Felix Bus - Rotas Disponíveis</title>
     <meta name="keywords" content="">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -111,7 +112,7 @@ $resultado = $stmt->get_result();
     <link rel="stylesheet" href="owl.carousel.min.css">
     <link rel="stylesheet" href="owl.theme.default.min.css">
     <style>
-        .viagem-card {
+        .rota-card {
             background: #fff;
             border-radius: 8px;
             padding: 16px;
@@ -121,35 +122,72 @@ $resultado = $stmt->get_result();
             justify-content: space-between;
             align-items: center;
         }
-        .viagem-info {
+        .rota-info {
             display: flex;
-            flex-direction: row; /* Alterado para row para exibição horizontal */
-            align-items: center; /* Alinha os itens verticalmente ao centro */
-            gap: 20px; /* Espaço entre os itens de informação */
+            flex-direction: row;
+            align-items: center;
+            gap: 20px;
         }
-        .viagem-info span {
-            margin: 0; /* Remove margem vertical dos spans individuais */
-        }
-        .viagem-horas {
-            font-weight: bold;
+        .rota-info span {
+            margin: 0;
             font-size: 18px;
-            margin-right: 100px; /* Espaço entre horas e outras infos */
         }
-        .viagem-preco {
-            font-size: 20px;
-            font-weight: bold;
-            color: green;
-        }
-        .continuar-btn {
-            background-color: #4CAF50;
+        .procurar-btn {
+            background-color: #007bff;
             color: white;
             padding: 8px 16px;
             text-decoration: none;
             border-radius: 6px;
             font-weight: bold;
         }
-        .continuar-btn:hover {
-            background-color: #45a049;
+        .procurar-btn:hover {
+            background-color: #0056b3;
+        }
+        .filter-form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .filter-form .form-group {
+            margin-bottom: 15px;
+        }
+        .filter-form .btn-primary {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+        .filter-form .btn-primary:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+        /* Novos estilos para a ordenação */
+        .sort-options {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap; /* Permite que os botões quebrem a linha em telas pequenas */
+        }
+        .sort-options a {
+            text-decoration: none;
+            padding: 8px 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        .sort-options a.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .sort-options a:hover:not(.active) {
+            background-color: #e2e6ea;
+        }
+        .sort-options .sort-label {
+            font-weight: bold;
+            margin-right: 5px;
         }
     </style>
 </head>
@@ -215,10 +253,10 @@ $resultado = $stmt->get_result();
                             <div class="limit-box">
                                 <nav class="main-menu">
                                     <ul class="menu-area-main">
-                                        <li class="active"> <a href="index.php">Início</a> </li>
+                                        <li> <a href="index.php">Início</a> </li>
                                         <li> <a href="sobre_nos.php">Sobre nós</a> </li>
                                         <li><a href="viagens.php">Viagens</a></li>
-                                        <li><a href="#contact">Contacta-nos</a></li>
+                                        <li class="active"><a href="rotas.php">Rotas</a></li> <li><a href="#contact">Contacta-nos</a></li>
                                     </ul>
                                 </nav>
                             </div>
@@ -228,35 +266,83 @@ $resultado = $stmt->get_result();
             </div>
         </div>
     </header>
+
     <div class="container mt-5">
-        <h1 class="mb-4">Viagens Disponíveis</h1>
+        <h1 class="mb-4">Filtrar Rotas</h1>
+        <div class="filter-form">
+            <form action="rotas.php" method="GET">
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="origem">Origem:</label>
+                            <input type="text" class="form-control" id="origem" name="origem" value="<?php echo htmlspecialchars($filtro_origem); ?>" placeholder="Ex: Lisboa">
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="destino">Destino:</label>
+                            <input type="text" class="form-control" id="destino" name="destino" value="<?php echo htmlspecialchars($filtro_destino); ?>" placeholder="Ex: Porto">
+                        </div>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary btn-block">Filtrar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="container mt-3">
+        <h1 class="mb-4">Rotas Disponíveis</h1>
+
+        <div class="sort-options">
+            <span class="sort-label">Ordenar por:</span>
+            <?php
+            // Função auxiliar para gerar URLs de ordenação
+            function getSortUrlRotas($param, $current_ordenar_por, $current_direcao_ordenacao, $filtro_origem, $filtro_destino) {
+                $direcao = 'ASC';
+                if ($current_ordenar_por == $param && $current_direcao_ordenacao == 'ASC') {
+                    $direcao = 'DESC'; // Alternar para DESC se já estiver ASC no mesmo parâmetro
+                }
+                $url = 'rotas.php?ordenar_por=' . $param . '&direcao=' . $direcao;
+                if (!empty($filtro_origem)) {
+                    $url .= '&origem=' . urlencode($filtro_origem);
+                }
+                if (!empty($filtro_destino)) {
+                    $url .= '&destino=' . urlencode($filtro_destino);
+                }
+                return $url;
+            }
+
+            // Classes 'active' para os botões de ordenação atuais
+            $class_origem = ($ordenar_por == 'origem') ? 'active' : '';
+            $class_destino = ($ordenar_por == 'destino') ? 'active' : '';
+
+            // Ícones de direção (opcional, para feedback visual)
+            $icon_origem = ($ordenar_por == 'origem' && $direcao_ordenacao == 'ASC') ? ' &#9650;' : (($ordenar_por == 'origem' && $direcao_ordenacao == 'DESC') ? ' &#9660;' : '');
+            $icon_destino = ($ordenar_por == 'destino' && $direcao_ordenacao == 'ASC') ? ' &#9650;' : (($ordenar_por == 'destino' && $direcao_ordenacao == 'DESC') ? ' &#9660;' : '');
+            ?>
+            <a href="<?php echo getSortUrlRotas('origem', $ordenar_por, $direcao_ordenacao, $filtro_origem, $filtro_destino); ?>" class="<?php echo $class_origem; ?>">Origem<?php echo $icon_origem; ?></a>
+            <a href="<?php echo getSortUrlRotas('destino', $ordenar_por, $direcao_ordenacao, $filtro_origem, $filtro_destino); ?>" class="<?php echo $class_destino; ?>">Destino<?php echo $icon_destino; ?></a>
+        </div>
+
+
         <?php
         if ($resultado && $resultado->num_rows > 0) {
             while ($linha = $resultado->fetch_assoc()) {
-                $id_viagem = htmlspecialchars($linha["id_viagem"]);
-                // Formatação da hora de partida
-                $hora_partida_formatada = (new DateTime($linha["hora"]))->format("H:i");
-                // Formatação da hora de chegada diretamente do banco de dados
-                $hora_chegada_formatada = (new DateTime($linha["hora_chegada"]))->format("H:i");
-
-                echo "<div class='viagem-card'>";
-                    echo "<div class='viagem-info'>";
-                    // Exibindo as horas formatadas
-                    echo "<div class='viagem-horas'>" . $hora_partida_formatada . " → " . $hora_chegada_formatada . "</div>";
-                    // Agora 'origem' e 'destino' vêm da junção com a tabela de localidades
-                    echo "<span><strong>Origem:</strong> " . htmlspecialchars($linha["origem"]) . "</span>";
-                    echo "<span><strong>Destino:</strong> " . htmlspecialchars($linha["destino"]) . "</span>";
-                    echo "<span><strong>Data:</strong> " . htmlspecialchars($linha["data"]) . "</span>";
+                $id_rota = htmlspecialchars($linha["id_rota"]);
+                echo "<div class='rota-card'>";
+                    echo "<div class='rota-info'>";
+                        echo "<span><strong>Origem:</strong> " . htmlspecialchars($linha["origem"]) . "</span>";
+                        echo "<span><strong>Destino:</strong> " . htmlspecialchars($linha["destino"]) . "</span>";
                     echo "</div>";
                     echo "<div>";
-                    echo "<div class='viagem-preco'>" . number_format($linha["preco"], 2, ',', '.') . " €</div>";
-                    // Passando o id_viagem para a página de compra
-                    echo "<a href='comprar_viagem.php?id=" . $id_viagem . "' class='continuar-btn'>Continuar</a>";
+                    echo "<a href='viagens.php?origem=" . urlencode($linha["origem"]) . "&destino=" . urlencode($linha["destino"]) . "' class='procurar-btn'>Procurar Viagens</a>";
                     echo "</div>";
                 echo "</div>";
             }
         } else {
-            echo "<p>Não foram encontradas viagens com os critérios de pesquisa.</p>";
+            echo "<p>Não foram encontradas rotas.</p>";
         }
         $conn->close();
         ?>
