@@ -251,7 +251,7 @@ $resultado = $stmt->get_result();
                     echo "<div>";
                     echo "<div class='viagem-preco'>" . number_format($linha["preco"], 2, ',', '.') . " €</div>";
                     // Passando o id_viagem para a página de compra
-                    echo "<a href='comprar_viagem.php?id=" . $id_viagem . "' class='continuar-btn'>Continuar</a>";
+                    echo "<a href='comprar_bilhete.php?id_viagem=" . htmlspecialchars($linha["id_viagem"]) . "' class='continuar-btn'>Continuar</a>";
                     echo "</div>";
                 echo "</div>";
             }
