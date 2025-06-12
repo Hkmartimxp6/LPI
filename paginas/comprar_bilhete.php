@@ -25,24 +25,19 @@ if (isset($_GET['id_viagem'])) {
 // Se, após todas as tentativas, o id_viagem ainda for inválido, exibe erro e para
 if (!$id_viagem || $id_viagem <= 0) {
     echo "<p style='color: red; background-color: #ffe6e6; padding: 10px; border: 1px solid red; border-radius: 5px;'>Erro de validação: ID da viagem inválido ou em falta.</p>";
-    // Opcional: Redirecionar para a página de viagens se o ID da viagem for inválido
-    // header("Location: viagens.php");
-    // exit();
-    // Parar a execução aqui para evitar mais erros
     exit();
 }
 
 // Verifica se o utilizador está logado
 if (!isset($_SESSION["utilizador"])) {
-    // Redirecionar para login se o utilizador não estiver logado
     header("Location: login.php");
     exit();
 }
 
-$id_utilizador = $_SESSION["utilizador"]; // Supondo que guardas o ID do utilizador na sessão
+$id_utilizador = $_SESSION["utilizador"];
 
 // Inicializa num_passageiros antes do POST para o formulário
-$num_passageiros = 1; // Valor padrão para o formulário no formulário HTML
+$num_passageiros = 1;
 
 // --- INÍCIO DO BLOCO DE PROCESSAMENTO POST ---
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['comprar_bilhete'])) {
@@ -59,6 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['comprar_bilhete'])) {
     // 1. Obter o preço da viagem da base de dados e calcular o preco_total
     $sql_preco_viagem = "SELECT preco FROM viagem WHERE id_viagem = ?";
     $stmt_preco = $conn->prepare($sql_preco_viagem);
+
     if ($stmt_preco === false) {
         die("Erro na preparação da query do preço: " . $conn->error);
     }
@@ -80,6 +76,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['comprar_bilhete'])) {
     // 2. Obter o saldo atual da carteira do utilizador
     $sql_saldo = "SELECT saldo FROM carteira WHERE id_utilizador = ?";
     $stmt_saldo = $conn->prepare($sql_saldo);
+
     if ($stmt_saldo === false) {
         die("Erro na preparação da query do saldo: " . $conn->error);
     }
@@ -120,7 +117,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['comprar_bilhete'])) {
         }
         $stmt_update_carteira->close();
 
-
         // 5. Registar a transação na tabela 'carteira_log'
         // Assumindo que id_operacao = 3 para 'compra de bilhete' (conforme imagem da tabela operacao)
         $id_operacao_compra_bilhete = 3;
@@ -129,12 +125,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['comprar_bilhete'])) {
         // Se a sua tabela 'carteira' usa 'id_utilizador' como PK, então pode usar $id_utilizador diretamente no bind_param
         $sql_get_id_carteira = "SELECT id_carteira FROM carteira WHERE id_utilizador = ?";
         $stmt_get_id_carteira = $conn->prepare($sql_get_id_carteira);
+
         if ($stmt_get_id_carteira === false) {
             throw new Exception("Erro na preparação da query para obter id_carteira: " . $conn->error);
         }
         $stmt_get_id_carteira->bind_param("i", $id_utilizador);
         $stmt_get_id_carteira->execute();
         $result_id_carteira = $stmt_get_id_carteira->get_result();
+
         if ($result_id_carteira->num_rows > 0) {
             $row_id_carteira = $result_id_carteira->fetch_assoc();
             $id_carteira = $row_id_carteira['id_carteira'];
@@ -145,6 +143,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['comprar_bilhete'])) {
 
         $sql_insert_carteira_log = "INSERT INTO carteira_log (id_carteira, id_operacao, data, montante) VALUES (?, ?, NOW(), ?)";
         $stmt_insert_carteira_log = $conn->prepare($sql_insert_carteira_log);
+
         if ($stmt_insert_carteira_log === false) {
             throw new Exception("Erro na preparação da query de log da carteira: " . $conn->error);
         }
@@ -160,6 +159,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['comprar_bilhete'])) {
         // E adicionando a data_compra, que você concordou em adicionar
         $sql_insert_bilhete = "INSERT INTO bilhete (id_viagem, id_utilizador, data_compra) VALUES (?, ?, NOW())";
         $stmt_insert_bilhete = $conn->prepare($sql_insert_bilhete);
+
         if ($stmt_insert_bilhete === false) {
             throw new Exception("Erro na preparação da query de inserção de bilhete: " . $conn->error);
         }
@@ -176,11 +176,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['comprar_bilhete'])) {
 
         echo "<p style='color: green; background-color: #e6ffe6; padding: 10px; border: 1px solid green; border-radius: 5px;'>Bilhete(s) comprado(s) com sucesso! ID do Bilhete: " . $id_bilhete_gerado . "</p>";
         echo "<p>Novo saldo na carteira: " . number_format($novo_saldo, 2, ',', '.') . "€</p>";
-        // Opcional: Limpar o ID da viagem da sessão após a compra bem-sucedida para evitar compras acidentais
-        // unset($_SESSION['id_viagem']);
-        // Redirecionar para uma página de sucesso ou para a página de bilhetes do utilizador
-        // header("Location: bilhetes_utilizador.php");
-        // exit();
 
     } catch (Exception $e) {
         // Se algo correu mal, reverter a transação

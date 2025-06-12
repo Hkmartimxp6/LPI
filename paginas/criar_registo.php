@@ -19,11 +19,11 @@
     $morada = $_POST["morada"];
     $telemovel = $_POST["telemovel"];
 
-    // Usando md5 para hashing da password como no seu código original
+    // md5 para hashing da password como no seu código original
     $pass_hashed = md5($pass_raw);
     $tipo = CLIENTE_NAO_VALIDO; // Assumindo que CLIENTE_NAO_VALIDO está definido em utilizadores.php
 
-    // 1. Validar se as passwords coincidem
+    // Validar se as passwords coincidem
     if ($pass_raw !== $confirmar_pass) {
         echo "As passwords não coincidem! Redirecionando para o registo...";
         header("refresh:3; url=registo.php");
@@ -31,7 +31,7 @@
     }
 
 
-    // 2. Query para verificar se o utilizador ou email já existem
+    // Query para verificar se o utilizador ou email já existem
     $stmt_check = $conn->prepare("SELECT nome_utilizador FROM utilizador WHERE nome_utilizador = ? OR email = ?");
     $stmt_check->bind_param("ss", $user, $email);
     $stmt_check->execute();
@@ -48,7 +48,7 @@
     $stmt_check->close();
 
 
-    // 3. Obter o ultimo id da carteira (max + 1)
+    // Obter o ultimo id da carteira (max + 1)
     $res = $conn->query("SELECT MAX(id_carteira) AS max_id FROM carteira");
     if (!$res) {
         echo "Erro ao obter o último ID da carteira: " . $conn->error;
@@ -59,7 +59,7 @@
     $new_id_carteira = $row['max_id'] + 1;
 
 
-    // 4. Criar nova carteira
+    // Criar nova carteira
     $conn->begin_transaction();
 
     $stmt_carteira = $conn->prepare("INSERT INTO carteira (id_carteira, saldo) VALUES (?, 0)");
@@ -80,11 +80,8 @@
     $stmt_carteira->close();
 
 
-    // 5. Inserir o novo utilizador com os novos campos
-    // A coluna na BD é 'nome'.
+    // Inserir o novo utilizador com os novos campos
     $sql_insert_user = "INSERT INTO utilizador (password, nome_utilizador, nome, morada, telemovel, tipo_utilizador, id_carteira, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-
-    
     $stmt_insert = $conn->prepare($sql_insert_user);
 
     if ($stmt_insert === false) {
@@ -97,7 +94,7 @@
     $stmt_insert->bind_param("sssssiis", $pass_hashed, $user, $nome, $morada, $telemovel, $tipo, $new_id_carteira, $email);
 
 
-    // Caso o insert funcione, comitar a transação e voltar para a pagina inicial
+    // Caso o insert funcione, dar commit da transação e voltar para a pagina inicial
     if ($stmt_insert->execute()) {
         $conn->commit();
         echo "Registo efetuado com sucesso! Redirecionando...";

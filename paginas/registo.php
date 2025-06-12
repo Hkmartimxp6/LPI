@@ -17,7 +17,6 @@
     <link rel="stylesheet" href="owl.carousel.min.css">
     <link rel="stylesheet" href="owl.theme.default.min.css">
     <style>
-        /* Estilos adicionais para o layout */
         @media (min-width: 768px) {
             .gradient-form {
                 height: 100vh !important;
@@ -30,14 +29,6 @@
                 border-bottom-right-radius: .3rem;
             }
         }
-        /* O gradiente 'gradient-custom-2' é esperado no seu ficheiro style.css ou em outro local */
-        /* Se não estiver, por favor, adicione-o ao seu style.css:
-        .gradient-custom-2 {
-            background: #fccb90;
-            background: -webkit-linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);
-            background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);
-        }
-        */
     </style>
 </head>
 
