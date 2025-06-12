@@ -74,7 +74,7 @@ if (isset($_SESSION["utilizador"])) {
 function printGestaoBilhetes()
 {
     echo "<div class='botaoCorpo'>
-            <form action='pagina_dados_pessoais.php'>
+            <form action='bilhetes.php'>
                 <input type='submit' value='Gestão Bilhetes' id='btCorpo'>
             </form>
           </div>";
@@ -92,7 +92,7 @@ function printDadosPessoais()
 function printGestaoCarteira()
 {
     echo "<div class='botaoCorpo'>
-            <form action='pagina_gestao_carteira.php'>
+            <form action='carteira.php'>
                 <input type='submit' value='Gestão Carteira' id='btCorpo'>
             </form>
           </div>";

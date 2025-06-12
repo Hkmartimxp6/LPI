@@ -2,7 +2,8 @@
 // Inclui o ficheiro de conexão com o banco de dados
 include "../basedados/basedados.h";
 // Inclui o ficheiro de utilizadores, se contiver funções ou classes relacionadas
-include "utilizadores.php";
+// include "utilizadores.php"; // Remova ou mantenha se tiver outras funções úteis
+include "carteira_funcoes.php"; // Inclua o novo ficheiro de funções da carteira
 
 // Inicia a sessão PHP
 session_start();
@@ -13,31 +14,15 @@ if (!isset($_SESSION['utilizador'])) {
     exit();
 }
 
-$username = $_SESSION['utilizador'];
-$saldoAtual = 0; // Valor padrão, será atualizado pela DB
-$mensagem = ""; // Variável para armazenar mensagens de feedback ao utilizador
-$tipo_mensagem = ""; // 'success' ou 'danger' para estilizar a mensagem
+$nome_user = $_SESSION['utilizador'];
+$saldoAtual = 0;
+$mensagem = "";
+$tipo_mensagem = "";
 
-// --- NOVO: Obter os IDs das operações da tabela 'operacao' ---
-$id_operacao_adicionar_saldo = null;
-$id_operacao_retirar_saldo = null;
-
-$stmt_get_operacoes = $conn->prepare("SELECT id_operacao, descricao FROM operacao WHERE descricao IN ('Adicionar Saldo', 'Retirar Saldo')");
-if ($stmt_get_operacoes) {
-    $stmt_get_operacoes->execute();
-    $result_operacoes = $stmt_get_operacoes->get_result();
-    while ($row_operacao = $result_operacoes->fetch_assoc()) {
-        if ($row_operacao['descricao'] == 'Adicionar Saldo') {
-            $id_operacao_adicionar_saldo = $row_operacao['id_operacao'];
-        } elseif ($row_operacao['descricao'] == 'Retirar Saldo') {
-            $id_operacao_retirar_saldo = $row_operacao['id_operacao'];
-        }
-    }
-    $stmt_get_operacoes->close();
-} else {
-    $mensagem = "Erro ao preparar query para obter IDs de operações: " . $conn->error;
-    $tipo_mensagem = "danger";
-}
+// Obter os IDs das operações da tabela operacao
+$operacao_ids = getOperacaoIds($conn);
+$id_operacao_adicionar_saldo = $operacao_ids['adicionar'];
+$id_operacao_retirar_saldo = $operacao_ids['retirar'];
 
 // Verifica se os IDs das operações foram encontrados
 if ($id_operacao_adicionar_saldo === null || $id_operacao_retirar_saldo === null) {
@@ -56,22 +41,9 @@ if (isset($_GET['msg']) && isset($_GET['type'])) {
     $active_tab = isset($_GET['tab']) ? $_GET['tab'] : (isset($_POST['active_tab']) ? $_POST['active_tab'] : 'depositTab');
 }
 
-// --- Lógica para processar depósitos e levantamentos (quando o formulário é submetido) ---
+// Lógica para processar depósitos e levantamentos (quando o formulário é submetido)
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $id_carteira_do_utilizador_post = null; // Variável para armazenar o id_carteira para a transação
-
-    // É essencial obter o id_carteira novamente, pois esta é uma nova requisição POST
-    $stmt_get_id_carteira_post = $conn->prepare("SELECT id_carteira FROM utilizador WHERE nome_utilizador = ?");
-    if ($stmt_get_id_carteira_post) {
-        $stmt_get_id_carteira_post->bind_param("s", $username);
-        $stmt_get_id_carteira_post->execute();
-        $result_id_carteira_post = $stmt_get_id_carteira_post->get_result();
-        if ($result_id_carteira_post->num_rows > 0) {
-            $row_id_carteira_post = $result_id_carteira_post->fetch_assoc();
-            $id_carteira_do_utilizador_post = $row_id_carteira_post['id_carteira'];
-        }
-        $stmt_get_id_carteira_post->close();
-    }
+    $id_carteira_do_utilizador_post = getIdCarteiraUtilizador($conn, $nome_user);
 
     if ($id_carteira_do_utilizador_post === null) {
         $mensagem = "Erro: Não foi possível encontrar a carteira do utilizador para processar a transação.";
@@ -80,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Processar Depósito
         if (isset($_POST['depositar'])) {
             $valor_deposito = filter_input(INPUT_POST, 'valor_deposito', FILTER_VALIDATE_FLOAT);
-            $active_tab = "depositTab"; // Assegura que a aba de depósito permanece ativa
+            $active_tab = "depositTab";
 
             if ($valor_deposito === false || $valor_deposito <= 0) {
                 $mensagem = "Valor de depósito inválido. Por favor, insira um valor positivo.";
@@ -89,66 +61,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $mensagem = "Erro de configuração: ID de operação 'Adicionar Saldo' não definido.";
                 $tipo_mensagem = "danger";
             } else {
-                // Iniciar uma transação de banco de dados para garantir a integridade dos dados
-                $conn->begin_transaction();
-                try {
-                    // 1. Obter o saldo atual, bloqueando a linha para evitar problemas de concorrência
-                    $stmt_get_saldo = $conn->prepare("SELECT saldo FROM carteira WHERE id_carteira = ? FOR UPDATE");
-                    $stmt_get_saldo->bind_param("i", $id_carteira_do_utilizador_post);
-                    $stmt_get_saldo->execute();
-                    $result_get_saldo = $stmt_get_saldo->get_result();
-
-                    if ($result_get_saldo->num_rows > 0) {
-                        $row_get_saldo = $result_get_saldo->fetch_assoc();
-                        $saldo_anterior = $row_get_saldo['saldo'];
-                        $novo_saldo = $saldo_anterior + $valor_deposito;
-
-                        // 2. Atualizar o saldo na tabela 'carteira'
-                        $stmt_update_saldo = $conn->prepare("UPDATE carteira SET saldo = ? WHERE id_carteira = ?");
-                        $stmt_update_saldo->bind_param("di", $novo_saldo, $id_carteira_do_utilizador_post); // 'd' para double/float
-
-                        if ($stmt_update_saldo->execute()) {
-                            // 3. Registar a transação na tabela 'carteira_log'
-                            // Substituído 'transacao' por 'carteira_log' e colunas 'tipo', 'data_transacao' por 'id_operacao', 'data', 'montante'
-                            $stmt_insert_log = $conn->prepare("INSERT INTO carteira_log (id_carteira, id_operacao, data, montante) VALUES (?, ?, NOW(), ?)");
-                            // id_operacao_adicionar_saldo é o ID para "Adicionar Saldo"
-                            $stmt_insert_log->bind_param("iid", $id_carteira_do_utilizador_post, $id_operacao_adicionar_saldo, $valor_deposito);
-
-                            if ($stmt_insert_log->execute()) {
-                                $conn->commit(); // Confirma todas as operações da transação
-                                $mensagem = "Depósito de " . number_format($valor_deposito, 2, ',', '.') . "€ realizado com sucesso! Novo saldo: " . number_format($novo_saldo, 2, ',', '.') . "€";
-                                $tipo_mensagem = "success";
-                                // Redireciona para evitar reenvio do formulário ao atualizar a página
-                                header("Location: carteira.php?msg=" . urlencode($mensagem) . "&type=" . $tipo_mensagem . "&tab=" . $active_tab);
-                                exit(); // Termina o script após o redirecionamento
-                            } else {
-                                $conn->rollback(); // Reverte se o registo da transação falhar
-                                $mensagem = "Erro ao registar a transação no log: " . $stmt_insert_log->error;
-                                $tipo_mensagem = "danger";
-                            }
-                            $stmt_insert_log->close();
-                        } else {
-                            $conn->rollback(); // Reverte se a atualização do saldo falhar
-                            $mensagem = "Erro ao atualizar o saldo: " . $stmt_update_saldo->error;
-                            $tipo_mensagem = "danger";
-                        }
-                        $stmt_update_saldo->close();
-                    } else {
-                        $conn->rollback();
-                        $mensagem = "Erro interno: Saldo do utilizador não encontrado para atualização.";
-                        $tipo_mensagem = "danger";
-                    }
-                    $stmt_get_saldo->close();
-                } catch (Exception $e) {
-                    $conn->rollback(); // Reverte em caso de exceção
-                    $mensagem = "Ocorreu um erro inesperado na transação: " . $e->getMessage();
-                    $tipo_mensagem = "danger";
+                $resultado = adicionarSaldo($conn, $id_carteira_do_utilizador_post, $valor_deposito, $id_operacao_adicionar_saldo);
+                $mensagem = $resultado['message'];
+                $tipo_mensagem = $resultado['success'] ? 'success' : 'danger';
+                if ($resultado['success']) {
+                    header("Location: carteira.php?msg=" . urlencode($mensagem) . "&type=" . $tipo_mensagem . "&tab=" . $active_tab);
+                    exit();
                 }
             }
-        } // Processar Levantamento
+        }
+        // Processar Levantamento
         elseif (isset($_POST['levantar'])) {
             $valor_levantamento = filter_input(INPUT_POST, 'valor_levantamento', FILTER_VALIDATE_FLOAT);
-            $active_tab = "withdrawTab"; // Assegura que a aba de levantamento permanece ativa
+            $active_tab = "withdrawTab";
 
             if ($valor_levantamento === false || $valor_levantamento <= 0) {
                 $mensagem = "Valor de levantamento inválido. Por favor, insira um valor positivo.";
@@ -157,112 +82,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $mensagem = "Erro de configuração: ID de operação 'Retirar Saldo' não definido.";
                 $tipo_mensagem = "danger";
             } else {
-                $conn->begin_transaction();
-                try {
-                    // 1. Obter o saldo atual, bloqueando a linha
-                    $stmt_get_saldo = $conn->prepare("SELECT saldo FROM carteira WHERE id_carteira = ? FOR UPDATE");
-                    $stmt_get_saldo->bind_param("i", $id_carteira_do_utilizador_post);
-                    $stmt_get_saldo->execute();
-                    $result_get_saldo = $stmt_get_saldo->get_result();
-
-                    if ($result_get_saldo->num_rows > 0) {
-                        $row_get_saldo = $result_get_saldo->fetch_assoc();
-                        $saldo_anterior = $row_get_saldo['saldo'];
-
-                        // Verificar se há saldo suficiente para o levantamento
-                        if ($saldo_anterior >= $valor_levantamento) {
-                            $novo_saldo = $saldo_anterior - $valor_levantamento;
-
-                            // 2. Atualizar o saldo
-                            $stmt_update_saldo = $conn->prepare("UPDATE carteira SET saldo = ? WHERE id_carteira = ?");
-                            $stmt_update_saldo->bind_param("di", $novo_saldo, $id_carteira_do_utilizador_post);
-
-                            if ($stmt_update_saldo->execute()) {
-                                // 3. Registar a transação na tabela 'carteira_log'
-                                // Substituído 'transacao' por 'carteira_log' e colunas 'tipo', 'data_transacao' por 'id_operacao', 'data', 'montante'
-                                $stmt_insert_log = $conn->prepare("INSERT INTO carteira_log (id_carteira, id_operacao, data, montante) VALUES (?, ?, NOW(), ?)");
-                                // id_operacao_retirar_saldo é o ID para "Retirar Saldo"
-                                $stmt_insert_log->bind_param("iid", $id_carteira_do_utilizador_post, $id_operacao_retirar_saldo, $valor_levantamento);
-
-                                if ($stmt_insert_log->execute()) {
-                                    $conn->commit();
-                                    $mensagem = "Levantamento de " . number_format($valor_levantamento, 2, ',', '.') . "€ realizado com sucesso! Novo saldo: " . number_format($novo_saldo, 2, ',', '.') . "€";
-                                    $tipo_mensagem = "success";
-                                    header("Location: carteira.php?msg=" . urlencode($mensagem) . "&type=" . $tipo_mensagem . "&tab=" . $active_tab);
-                                    exit();
-                                } else {
-                                    $conn->rollback();
-                                    $mensagem = "Erro ao registar a transação no log: " . $stmt_insert_log->error;
-                                    $tipo_mensagem = "danger";
-                                }
-                                $stmt_insert_log->close();
-                            } else {
-                                $conn->rollback();
-                                $mensagem = "Erro ao atualizar o saldo: " . $stmt_update_saldo->error;
-                                $tipo_mensagem = "danger";
-                            }
-                            $stmt_update_saldo->close();
-                        } else {
-                            $conn->rollback();
-                            $mensagem = "Saldo insuficiente para realizar o levantamento. Saldo atual: " . number_format($saldo_anterior, 2, ',', '.') . "€";
-                            $tipo_mensagem = "danger";
-                        }
-                    } else {
-                        $conn->rollback();
-                        $mensagem = "Erro interno: Saldo do utilizador não encontrado para verificação.";
-                        $tipo_mensagem = "danger";
-                    }
-                    $stmt_get_saldo->close();
-                } catch (Exception $e) {
-                    $conn->rollback();
-                    $mensagem = "Ocorreu um erro inesperado na transação: " . $e->getMessage();
-                    $tipo_mensagem = "danger";
+                $resultado = retirarSaldo($conn, $id_carteira_do_utilizador_post, $valor_levantamento, $id_operacao_retirar_saldo);
+                $mensagem = $resultado['message'];
+                $tipo_mensagem = $resultado['success'] ? 'success' : 'danger';
+                if ($resultado['success']) {
+                    header("Location: carteira.php?msg=" . urlencode($mensagem) . "&type=" . $tipo_mensagem . "&tab=" . $active_tab);
+                    exit();
                 }
             }
         }
     }
 }
 
-// --- Lógica para obter o saldo atual do utilizador para exibição (sempre executada) ---
-// Esta parte é separada do POST para garantir que o saldo exibido está sempre atualizado,
-// mesmo que nenhuma transação tenha sido processada nesta requisição.
-$id_carteira_do_utilizador = null;
-$stmt_get_id_carteira_display = $conn->prepare("SELECT id_carteira FROM utilizador WHERE nome_utilizador = ?");
-
-if ($stmt_get_id_carteira_display) {
-    $stmt_get_id_carteira_display->bind_param("s", $username);
-    $stmt_get_id_carteira_display->execute();
-    $result_id_carteira_display = $stmt_get_id_carteira_display->get_result();
-
-    if ($result_id_carteira_display->num_rows > 0) {
-        $row_id_carteira_display = $result_id_carteira_display->fetch_assoc();
-        $id_carteira_do_utilizador = $row_id_carteira_display['id_carteira'];
-    } else {
-        $mensagem = "Erro: ID da carteira do utilizador não encontrado para '$username'.";
-        $tipo_mensagem = "danger";
-    }
-    $stmt_get_id_carteira_display->close();
-} else {
-    $mensagem = "Erro na preparação da query para obter id_carteira (exibição): " . $conn->error;
-    $tipo_mensagem = "danger";
-}
+// Lógica para obter o saldo atual do utilizador para exibição
+$id_carteira_do_utilizador = getIdCarteiraUtilizador($conn, $nome_user);
 
 if ($id_carteira_do_utilizador !== null) {
-    $stmt_saldo_display = $conn->prepare("SELECT saldo FROM carteira WHERE id_carteira = ?");
-    if ($stmt_saldo_display) {
-        $stmt_saldo_display->bind_param("i", $id_carteira_do_utilizador);
-        $stmt_saldo_display->execute();
-        $result_saldo_display = $stmt_saldo_display->get_result();
-        if ($result_saldo_display->num_rows > 0) {
-            $row_saldo_display = $result_saldo_display->fetch_assoc();
-            $saldoAtual = $row_saldo_display['saldo'];
-        } else {
-            $mensagem = "Erro: Saldo da carteira não encontrado para o ID fornecido: $id_carteira_do_utilizador.";
-            $tipo_mensagem = "danger";
-        }
-        $stmt_saldo_display->close();
-    } else {
-        $mensagem = "Erro na preparação da query para obter saldo (exibição): " . $conn->error;
+    $saldoAtual = getSaldoAtual($conn, $id_carteira_do_utilizador);
+} else {
+    // Se o ID da carteira não for encontrado, a mensagem já deve ter sido definida.
+    // Garantir que a mensagem de erro é exibida se não houver ID de carteira para exibição.
+    if (empty($mensagem)) {
+        $mensagem = "Erro: ID da carteira do utilizador não encontrado para '$nome_user'.";
         $tipo_mensagem = "danger";
     }
 }

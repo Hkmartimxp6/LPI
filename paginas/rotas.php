@@ -12,7 +12,7 @@ if (isset($_SESSION["utilizador"])) {
     $loggedIn = true;
 }
 
-// 1. Inicializar variáveis de filtro e ordenação a partir dos parâmetros GET
+// Inicializar variáveis de filtro e ordenação a partir dos parâmetros GET
 $filtro_origem = $_GET['origem'] ?? '';
 $filtro_destino = $_GET['destino'] ?? '';
 
@@ -22,10 +22,10 @@ $direcao_ordenacao = $_GET['direcao'] ?? 'ASC'; // Padrão: ascendente
 
 // Validar a direção da ordenação para evitar SQL Injection
 if (!in_array(strtoupper($direcao_ordenacao), ['ASC', 'DESC'])) {
-    $direcao_ordenacao = 'ASC'; // Valor seguro padrão
+    $direcao_ordenacao = 'ASC'; // Valor por defeito
 }
 
-// 2. Construir a query SQL para buscar rotas
+// Construir a query SQL para buscar rotas
 $sql = "
     SELECT DISTINCT
         r.id_rota,
@@ -39,36 +39,36 @@ $sql = "
 
 // Adicionar condições de filtro
 if (!empty($filtro_origem)) {
-    $sql .= " AND origem_loc.localidade LIKE ?";
+    $sql .= " AND origem_loc.localidade LIKE ?"; // adiciona isto à query 
 }
 if (!empty($filtro_destino)) {
-    $sql .= " AND destino_loc.localidade LIKE ?";
+    $sql .= " AND destino_loc.localidade LIKE ?"; // adiciona isto à query
 }
 
 // Adicionar ordenação dinâmica
-$order_clause = "";
+$atributo_ordenacao = "";
 switch ($ordenar_por) {
     case 'origem':
-        $order_clause = "origem_loc.localidade";
+        $atributo_ordenacao = "origem_loc.localidade";
         break;
     case 'destino':
-        $order_clause = "destino_loc.localidade";
+        $atributo_ordenacao = "destino_loc.localidade";
         break;
     default: // Caso padrão se nenhum for especificado ou um valor inválido
-        $order_clause = "origem_loc.localidade"; // Padrão para Origem
+        $atributo_ordenacao = "origem_loc.localidade"; // Padrão para Origem
         break;
 }
 
-$sql .= " ORDER BY " . $order_clause . " " . $direcao_ordenacao . ", destino_loc.localidade ASC"; // Adiciona ordenação secundária por destino para desempate
+$sql .= " ORDER BY " . $atributo_ordenacao . " " . $direcao_ordenacao . ", destino_loc.localidade ASC"; // Adiciona ordenação secundária por destino para desempate
 
-// 3. Preparar a query
+// Preparar a query
 $stmt = $conn->prepare($sql);
 
 if ($stmt === false) {
     die("Erro na preparação da query: " . $conn->error);
 }
 
-// 4. Ligar os parâmetros (bind_param)
+// Ligar os parâmetros com o bind_param
 $params = [];
 $types = "";
 
@@ -85,10 +85,10 @@ if (!empty($params)) {
     $stmt->bind_param($types, ...$params);
 }
 
-// 5. Executar a query
+// Executar a query
 $stmt->execute();
 
-// 6. Obter o resultado
+// Obter o resultado
 $resultado = $stmt->get_result();
 
 ?>
@@ -298,7 +298,7 @@ $resultado = $stmt->get_result();
         <div class="sort-options">
             <span class="sort-label">Ordenar por:</span>
             <?php
-            // Função auxiliar para gerar URLs de ordenação
+            // Função auxiliar para ordenação
             function getSortUrlRotas($param, $current_ordenar_por, $current_direcao_ordenacao, $filtro_origem, $filtro_destino) {
                 $direcao = 'ASC';
                 if ($current_ordenar_por == $param && $current_direcao_ordenacao == 'ASC') {
@@ -326,8 +326,10 @@ $resultado = $stmt->get_result();
             <a href="<?php echo getSortUrlRotas('destino', $ordenar_por, $direcao_ordenacao, $filtro_origem, $filtro_destino); ?>" class="<?php echo $class_destino; ?>">Destino<?php echo $icon_destino; ?></a>
         </div>
 
-
+        
         <?php
+
+        // Mostra as rotas filtradas
         if ($resultado && $resultado->num_rows > 0) {
             while ($linha = $resultado->fetch_assoc()) {
                 $id_rota = htmlspecialchars($linha["id_rota"]);
@@ -344,11 +346,11 @@ $resultado = $stmt->get_result();
         } else {
             echo "<p>Não foram encontradas rotas.</p>";
         }
+        
         $conn->close();
         ?>
     </div>
 
-    
     <script src="jquery.min.js"></script>
     <script src="popper.min.js"></script>
     <script src="bootstrap.bundle.min.js"></script>
