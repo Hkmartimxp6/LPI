@@ -1,9 +1,4 @@
 <?php
-// Ativa a exibição de todos os erros PHP para depuração (REMOVER EM PRODUÇÃO)
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 // Inclui o ficheiro de conexão com o banco de dados
 include "../basedados/basedados.h";
 // Inclui o ficheiro de utilizadores, se contiver funções ou classes relacionadas
