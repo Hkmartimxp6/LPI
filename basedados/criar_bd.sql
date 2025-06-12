@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 10-Jun-2025 às 02:24
+-- Tempo de geração: 12-Jun-2025 às 14:19
 -- Versão do servidor: 10.4.32-MariaDB
 -- versão do PHP: 8.2.12
 
@@ -76,7 +76,8 @@ INSERT INTO `autocarro` (`id_autocarro`, `lugares`, `nome_motorista`) VALUES
 CREATE TABLE `bilhete` (
   `id_bilhete` int(100) NOT NULL,
   `id_viagem` int(100) NOT NULL,
-  `id_utilizador` int(100) NOT NULL
+  `id_utilizador` int(100) NOT NULL,
+  `data_compra` datetime(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -96,9 +97,10 @@ CREATE TABLE `carteira` (
 
 INSERT INTO `carteira` (`id_carteira`, `saldo`) VALUES
 (1, 0.000),
-(2, 0.000),
+(2, 50.000),
 (3, 0.000),
-(4, 0.000);
+(4, 0.000),
+(5, 0.000);
 
 -- --------------------------------------------------------
 
@@ -107,10 +109,22 @@ INSERT INTO `carteira` (`id_carteira`, `saldo`) VALUES
 --
 
 CREATE TABLE `carteira_log` (
+  `id_carteira_log` int(100) NOT NULL,
   `id_carteira` int(100) NOT NULL,
   `id_operacao` int(100) NOT NULL,
-  `data` datetime(6) NOT NULL
+  `data` datetime(6) NOT NULL,
+  `montante` int(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Extraindo dados da tabela `carteira_log`
+--
+
+INSERT INTO `carteira_log` (`id_carteira_log`, `id_carteira`, `id_operacao`, `data`, `montante`) VALUES
+(1, 2, 1, '2025-06-10 19:07:01.000000', 10),
+(2, 2, 1, '2025-06-10 19:07:14.000000', 10),
+(3, 2, 2, '2025-06-10 19:08:04.000000', 20),
+(4, 2, 1, '2025-06-10 20:03:36.000000', 40);
 
 -- --------------------------------------------------------
 
@@ -157,6 +171,16 @@ CREATE TABLE `operacao` (
   `id_operacao` int(100) NOT NULL,
   `descricao` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Extraindo dados da tabela `operacao`
+--
+
+INSERT INTO `operacao` (`id_operacao`, `descricao`) VALUES
+(1, 'Adicionar Saldo'),
+(2, 'Retirar Saldo'),
+(3, 'Comprar Bilhete'),
+(4, 'Vender Bilhete');
 
 -- --------------------------------------------------------
 
@@ -231,7 +255,8 @@ INSERT INTO `utilizador` (`id_utilizador`, `password`, `nome_utilizador`, `nome`
 (15, 'cc7a84634199040d54376793842fe035', 'funcionario', NULL, NULL, NULL, 2, 1, ''),
 (16, '4983a0ab83ed86e0e7213c8783940193', 'cliente', NULL, NULL, NULL, 3, 2, ''),
 (17, '34b7da764b21d298ef307d04d8152dc5', 'tom', NULL, NULL, NULL, 3, 3, ''),
-(18, 'd39c73f590d2ad95763720f728258cdd', 'martim', NULL, NULL, NULL, 3, 4, 'martim@ipcb.pt');
+(18, 'd39c73f590d2ad95763720f728258cdd', 'martim', NULL, NULL, NULL, 3, 4, 'martim@ipcb.pt'),
+(19, '202cb962ac59075b964b07152d234b70', 'hkalexandrexp6', 'Ernesto', 'rua do alexandre', '9394707733', 3, 5, 'alexandre123@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -302,6 +327,7 @@ ALTER TABLE `carteira`
 -- Índices para tabela `carteira_log`
 --
 ALTER TABLE `carteira_log`
+  ADD PRIMARY KEY (`id_carteira_log`),
   ADD KEY `id_carteira` (`id_carteira`,`id_operacao`),
   ADD KEY `id_operacao_fk` (`id_operacao`);
 
@@ -378,6 +404,12 @@ ALTER TABLE `carteira`
   MODIFY `id_carteira` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2025000004;
 
 --
+-- AUTO_INCREMENT de tabela `carteira_log`
+--
+ALTER TABLE `carteira_log`
+  MODIFY `id_carteira_log` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT de tabela `localidade`
 --
 ALTER TABLE `localidade`
@@ -387,7 +419,7 @@ ALTER TABLE `localidade`
 -- AUTO_INCREMENT de tabela `operacao`
 --
 ALTER TABLE `operacao`
-  MODIFY `id_operacao` int(100) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_operacao` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de tabela `rota`
@@ -405,7 +437,7 @@ ALTER TABLE `tipo_utilizador`
 -- AUTO_INCREMENT de tabela `utilizador`
 --
 ALTER TABLE `utilizador`
-  MODIFY `id_utilizador` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id_utilizador` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT de tabela `viagem`
