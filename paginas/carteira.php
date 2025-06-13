@@ -8,13 +8,19 @@ session_start();
 
 // Redireciona se o utilizador não estiver logado
 if (!isset($_SESSION['utilizador'])) {
-    header("Location: login.php");
+    // Redireciona para a página inicial
+    header("Location: index.php");
+    // sai do script
     exit();
 }
 
+// Associar o nome do utilizador que está na sessão
 $nome_utilizador = $_SESSION['utilizador']['nome_utilizador'] ?? 'utilizador';
+// O saldo atual do utilizador, que é zero por defeito
 $saldo_atual = 0;
+// Mensagem de feedback para o utilizador
 $mensagem = "";
+// Tipo de mensagem (success ou danger)
 $tipo_mensagem = "";
 
 // Verifica se as constantes das operações estão definidas
@@ -25,52 +31,76 @@ if (!defined('ADICIONAR_SALDO') || !defined('RETIRAR_SALDO')) {
     $tipo_mensagem = "danger";
 }
 
-// Retrieve message and type from session after redirect
-if (isset($_SESSION['msg'])) {
-    $mensagem = $_SESSION['msg'];
-    $tipo_mensagem = $_SESSION['type'];
-    unset($_SESSION['msg']);
-    unset($_SESSION['type']);
-    unset($_SESSION['separador_ativo']); // Ainda é bom limpar, caso tenha sido definido antes
+// Lipa as mensagens de sessão, se existirem
+if (isset($_SESSION['mensagem'])) {
+    $mensagem = $_SESSION['mensagem'];
+    $tipo_mensagem = $_SESSION['tipo_mensagem'];
+    unset($_SESSION['mensagem']);
+    unset($_SESSION['tipo_mensagem']);
 }
 
 // Lógica para processar depósitos e levantamentos (quando o formulário é submetido)
+// Verifica se o método do form é POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Obter o ID da carteira do utilizador
     $id_carteira_utilizador = getIdCarteiraUtilizador($conn, $nome_utilizador);
 
+    // Se não encontrar o ID da carteira do utilizador, mostra uma mensagem de erro
     if ($id_carteira_utilizador === null) {
-        $_SESSION['msg'] = "Erro: Não foi possível encontrar a carteira do utilizador para processar a transação.";
-        $_SESSION['type'] = "danger";
+        // Define a mensagem de erro
+        $_SESSION['mensagem'] = "Erro: Não foi possível encontrar a carteira do utilizador para processar a transação.";
+        // Com o tipo'danger' (vermelho)
+        $_SESSION['tipo_mensagem'] = "danger";
+        // Redireciona para a página da carteira
         header("Location: carteira.php");
         exit();
     } else {
         // Processar Depósito
+        // Verifica se o botão de depósito foi pressionado
         if (isset($_POST['depositar'])) {
+            // Obtém o valor do depósito do formulário
             $valor_deposito = filter_input(INPUT_POST, 'valor_deposito', FILTER_VALIDATE_FLOAT);
 
+            // Verifica se o valor do depósito é válido
             if ($valor_deposito === false || $valor_deposito <= 0) {
-                $_SESSION['msg'] = "Valor de depósito inválido. Por favor, insira um valor positivo.";
-                $_SESSION['type'] = "danger";
+                // Define a mensagem de erro
+                $_SESSION['mensagem'] = "Valor de depósito inválido. Por favor, insira um valor positivo.";
+                // Com o tipo 'danger' (vermelho)
+                $_SESSION['tipo_mensagem'] = "danger";
             } else {
+                // Chama a função para adicionar saldo
                 $resultado = adicionarSaldo($conn, $id_carteira_utilizador, $valor_deposito, ADICIONAR_SALDO);
-                $_SESSION['msg'] = $resultado['message'];
-                $_SESSION['type'] = $resultado['success'] ? 'success' : 'danger';
+                // Guarda a mensagem na sessão
+                $_SESSION['mensagem'] = $resultado['message'];
+                // Define o tipo de mensagem com base no sucesso da operação
+                $_SESSION['tipo_mensagem'] = $resultado['success'] ? 'success' : 'danger';
             }
+            // Redireciona para a página da carteira
             header("Location: carteira.php");
             exit();
         }
+
         // Processar Levantamento
+        // Verifica se o botão de levantamento foi pressionado
         elseif (isset($_POST['levantar'])) {
+            // Obtém o valor do levantamento do formulário com validação do tipo float
             $valor_levantamento = filter_input(INPUT_POST, 'valor_levantamento', FILTER_VALIDATE_FLOAT);
 
+            // Verifica se o valor do levantamento é válido
             if ($valor_levantamento === false || $valor_levantamento <= 0) {
-                $_SESSION['msg'] = "Valor de levantamento inválido. Por favor, insira um valor positivo.";
-                $_SESSION['type'] = "danger";
+                // Define a mensagem de erro
+                $_SESSION['mensagem'] = "Valor de levantamento inválido. Por favor, insira um valor positivo.";
+                // Com o tipo 'danger' (vermelho)
+                $_SESSION['tipo_mensagem'] = "danger";
             } else {
+                // Chama a função para retirar saldo
                 $resultado = retirarSaldo($conn, $id_carteira_utilizador, $valor_levantamento, RETIRAR_SALDO);
-                $_SESSION['msg'] = $resultado['message'];
-                $_SESSION['type'] = $resultado['success'] ? 'success' : 'danger';
+                // Guarda a mensagem na sessão
+                $_SESSION['mensagem'] = $resultado['message'];
+                // Define o tipo de mensagem com base no sucesso da operação
+                $_SESSION['tipo_mensagem'] = $resultado['success'] ? 'success' : 'danger';
             }
+            // Redireciona para a página da carteira
             header("Location: carteira.php");
             exit();
         }
@@ -78,22 +108,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Lógica para obter o saldo atual do utilizador para exibição
+// Obter o ID da carteira do utilizador
 $id_carteira_utilizador = getIdCarteiraUtilizador($conn, $nome_utilizador);
 
+// Se o ID da carteira do utilizador for encontrado
 if ($id_carteira_utilizador !== null) {
+    // Obtém o saldo atual
     $saldo_atual = getSaldoAtual($conn, $id_carteira_utilizador);
 } else {
-    if (empty($mensagem)) { // Only set error if no other message is pending
+    // Se não encontrar o ID da carteira do utilizador, define uma mensagem de erro
+    if (empty($mensagem)) {
+        // Define a mensagem de erro
         $mensagem = "Erro: ID da carteira do utilizador não encontrado para '$nome_utilizador'.";
+        // Define o tipo de mensagem como 'danger' (vermelho)
         $tipo_mensagem = "danger";
     }
 }
 
 // Fechar a conexão com a base de dados
 $conn->close();
-
-$utilizador_logado = true;
 ?>
+
 <!DOCTYPE html>
 <html lang="pt">
 
@@ -114,9 +149,10 @@ $utilizador_logado = true;
                 <div class="wallet-header">
                     <h2>Minha Carteira</h2>
                     <p>Saldo Atual:</p>
+                    <!-- mostra o saldo do utilizador através da var $saldo_atual -->
                     <div class="balance-display"><?php echo number_format($saldo_atual, 2, ',', '.'); ?>€</div>
                 </div>
-
+                <!-- Mostra a mensagem com o tipo (sucesso? se sim usar o alert sucess, se não o alert-danger) -->
                 <?php if (!empty($mensagem)): ?>
                     <div class="alerts">
                         <div class="alert <?php echo $tipo_mensagem == 'success' ? 'alert-success' : 'alert-danger'; ?>">

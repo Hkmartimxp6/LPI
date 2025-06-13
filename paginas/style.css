@@ -2607,5 +2607,26 @@ height: 5;
         .btn-comprar:hover {
             background-color: #45a049;
         }
+
+        .container {
+            margin-top: 60px;
+        }
+
+        .card {
+            border-radius: 10px;
+        }
+
+        .btn-comprar {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+        }
+
+        .btn-comprar:hover {
+            background-color: #45a049;
+        }
     
     

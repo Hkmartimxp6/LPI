@@ -62,7 +62,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['criar'])) {
 
         // Commit da transação
         $conn->commit();
-    
     } catch (Exception $e) {
         $conn->rollback();
         die("Erro ao criar utilizador: " . $e->getMessage());

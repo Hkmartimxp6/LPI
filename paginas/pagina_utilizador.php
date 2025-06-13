@@ -1,7 +1,9 @@
 <?php
+// Inclui ficheiros de base de dados e funções de utilizadores
 include "../basedados/basedados.h";
 include "utilizadores.php";
 
+// Inicializa a sessão PHP
 session_start();
 
 // Verifica se a sessão está ativa e válida
@@ -10,21 +12,27 @@ if (!isset($_SESSION["utilizador"]) || !isset($_SESSION["utilizador"]["nome_util
     exit();
 }
 
-// Obter o nome de utilizador da sessão
+// Obtém o nome de utilizador da sessão
 $nome_utilizador = $_SESSION["utilizador"]["nome_utilizador"];
 
-// Consulta os dados atualizados do utilizador (caso tenham mudado na base de dados)
+// Consulta os dados atualizados do utilizador na base de dados
 $sql = "SELECT * FROM utilizador WHERE nome_utilizador = ?";
+// Prepara a consulta para evitar SQL Injection
 $stmt = $conn->prepare($sql);
+// Faz o bind do parâmetro
 $stmt->bind_param("s", $nome_utilizador);
+// Executa a consulta e obtém o resultado
 $stmt->execute();
+// Obtém o resultado da consulta
 $result = $stmt->get_result();
 
+// Se não encontrar o utilizador, faz logout
 if (!$result || $result->num_rows == 0) {
     header("Location: logout.php");
     exit();
 }
 
+// Busca os dados do utilizador
 $row = $result->fetch_assoc();
 
 // Verifica se o utilizador está num estado inválido
@@ -33,7 +41,7 @@ if ($row["tipo_utilizador"] == 4 || $row["tipo_utilizador"] == 5) {
     exit();
 }
 
-// Começo do HTML
+// Início do HTML do cabeçalho
 echo "<div id='cabecalho'>
     <div class='logo'>
         <a href='index.php'><img src='logo.png' style='width:300px;' alt='#'></a>
@@ -45,14 +53,14 @@ echo "<div id='cabecalho'>
     </div>
 </div>";
 
-// Conteúdo baseado no tipo de utilizador
+// Conteúdo principal baseado no tipo de utilizador
 echo "<div id='corpo'>";
 switch ($row["tipo_utilizador"]) {
     case ADMINISTRADOR: // 1
         printGestaoAlertas();
         printDadosPessoais();
         printGestaoUtilizadores();
-        printGestaoRotas();
+        printGestaoRotas(); 
         printGestaoCarteiras();
         break;
 
@@ -60,28 +68,29 @@ switch ($row["tipo_utilizador"]) {
         printDadosPessoais();
         printGestaoCarteiraPessoal();
         printGestaoBilhetes();
-        printCompraBilhetesParaCliente();
-        printGestaoCarteiras();
+        printCompraBilhetesParaCliente(); 
+        printGestaoCarteiras(); 
         break;
 
     case CLIENTE: // 3
         printGestaoBilhetes();
         printGestaoCarteiraPessoal();
-        printDadosPessoais();
+        printDadosPessoais(); 
         break;
 }
 echo "</div>";
 
-// Botão logout
+// Botão de logout
 echo "
     <div id='botao'>
         <form action='logout.php'><input type='submit' value='Logout'></form>
     </div>";
 
-// === Funções auxiliares ===
+// === Funções para imprimir botões ===
 
 function printGestaoBilhetes()
 {
+    // Botão para gestão de bilhetes
     echo "<div class='botaoCorpo'>
             <form action='gestao_bilhetes.php'>
                 <input type='submit' value='Gestão Bilhetes' id='btCorpo'>
@@ -91,6 +100,7 @@ function printGestaoBilhetes()
 
 function printCompraBilhetesParaCliente()
 {
+    // Botão para compra de bilhetes para clientes
     echo "<div class='botaoCorpo'>
             <form action='comprar_bilhetes_funcionario.php'>
                 <input type='submit' value='Compra Bilhetes para Clientes' id='btCorpo'>
@@ -98,9 +108,9 @@ function printCompraBilhetesParaCliente()
           </div>";
 }
 
-
 function printDadosPessoais()
 {
+    // Botão para dados pessoais
     echo "<div class='botaoCorpo'>
             <form action='pagina_dados_pessoais.php'>
                 <input type='submit' value='Dados Pessoais' id='btCorpo'>
@@ -110,6 +120,7 @@ function printDadosPessoais()
 
 function printGestaoCarteiraPessoal()
 {
+    // Botão para gestão da carteira pessoal
     echo "<div class='botaoCorpo'>
             <form action='carteira.php'>
                 <input type='submit' value='Gestão Carteira Pessoal' id='btCorpo'>
@@ -119,6 +130,7 @@ function printGestaoCarteiraPessoal()
 
 function printGestaoCarteiras()
 {
+    // Botão para gestão de carteiras dos clientes
     echo "<div class='botaoCorpo'>
             <form action='gestao_carteiras.php'>
                 <input type='submit' value='Gestão de Carteiras dos Clientes' id='btCorpo'>
@@ -128,6 +140,7 @@ function printGestaoCarteiras()
 
 function printGestaoRotas()
 {
+    // Botão para gestão de rotas
     echo "<div class='botaoCorpo'>
             <form action='gestao_rotas.php'>
                 <input type='submit' value='Gestão Rotas' id='btCorpo'>
@@ -137,6 +150,7 @@ function printGestaoRotas()
 
 function printGestaoUtilizadores()
 {
+    // Botão para gestão de utilizadores
     echo "<div class='botaoCorpo'>
             <form action='gestao_utilizadores.php'>
                 <input type='submit' value='Gestão Utilizadores' id='btCorpo'>
@@ -146,6 +160,7 @@ function printGestaoUtilizadores()
 
 function printGestaoAlertas()
 {
+    // Botão para gestão de alertas
     echo "<div class='botaoCorpo'>
             <form action='gestao_alertas.php'>
                 <input type='submit' value='Gestão Alertas' id='btCorpo'>

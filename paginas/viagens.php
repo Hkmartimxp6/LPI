@@ -1,10 +1,12 @@
 <?php
 
-include "../basedados/basedados.h"; // Certifique-se de que o caminho para basedados.h está correto
-include "utilizadores.php"; // Certifique-se de que o caminho para utilizadores.php está correto
+include "../basedados/basedados.h";
+include "utilizadores.php";
 
+// Iniciar a sessão PHP
 session_start();
 
+// Variável para verificar se o utilizador está logado
 $loggedIn = false;
 
 // Se o utilizador está com sessão iniciada, então está logado
@@ -42,9 +44,11 @@ if (!empty($filtro_origem)) {
     // Os '%' serão adicionados no bind_param para evitar SQL Injection
     $sql .= " AND origem_loc.localidade LIKE ?";
 }
+// Verificar se o filtro de destino está preenchido
 if (!empty($filtro_destino)) {
     $sql .= " AND destino_loc.localidade LIKE ?";
 }
+// Verificar se o filtro de data está preenchido
 if (!empty($filtro_data)) {
     // Para datas, geralmente queremos uma correspondência exata
     $sql .= " AND v.data = ?";
@@ -53,43 +57,43 @@ if (!empty($filtro_data)) {
 // Adicionar ordenação
 $sql .= " ORDER BY v.data, v.hora";
 
-// 3. Preparar a query (para segurança contra SQL Injection)
+// Preparar a query (para segurança contra SQL Injection)
 $stmt = $conn->prepare($sql);
 
+// Verificar se a preparação da query foi bem-sucedida
 if ($stmt === false) {
     die("Erro na preparação da query: " . $conn->error);
 }
 
-// 4. Ligar os parâmetros (bind_param) aos placeholders (?) na query
-$params = [];
-$types = ""; // String que define os tipos dos parâmetros ('s' para string, 'i' para int, 'd' para double)
+// Ligar os parâmetros (bind_param) aos placeholders (?) na query
+$parametros = [];
+$tipos = "";
 
+// Adicionar os parâmetros de filtro, se existirem
 if (!empty($filtro_origem)) {
-    $params[] = "%" . $filtro_origem . "%"; // Adiciona os '%' aqui, não na query SQL
-    $types .= "s"; // 's' para string
+    $parametros[] = "%" . $filtro_origem . "%"; // Adiciona os '%' aqui, não na query SQL
+    $tipos .= "s"; // 's' para string
 }
+// Verificar se o filtro de destino está preenchido
 if (!empty($filtro_destino)) {
-    $params[] = "%" . $filtro_destino . "%";
-    $types .= "s";
+    $parametros[] = "%" . $filtro_destino . "%";
+    $tipos .= "s";
 }
+// Verificar se o filtro de data está preenchido
 if (!empty($filtro_data)) {
-    $params[] = $filtro_data;
-    $types .= "s"; // Data é tratada como string pelo prepared statement
+    $parametros[] = $filtro_data;
+    $tipos .= "s"; // Data é tratada como string pelo prepared statement
 }
 
 // Se houver parâmetros para ligar, faça o bind
-if (!empty($params)) {
-    // A sintaxe `...$params` é o "splat operator" (desde PHP 5.6)
-    // que "desempacota" o array $params como argumentos individuais para bind_param
-    $stmt->bind_param($types, ...$params);
+if (!empty($parametros)) {
+    // Ligar os parâmetros à query
+    $stmt->bind_param($tipos, ...$parametros);
 }
-
-// 5. Executar a query
+// Executar a query
 $stmt->execute();
-
-// 6. Obter o resultado
+// Obter o resultado
 $resultado = $stmt->get_result();
-
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -246,38 +250,39 @@ $resultado = $stmt->get_result();
     <div class="container mt-5">
         <h1 class="mb-4">Viagens Disponíveis</h1>
         <?php
+        // Verifica se a consulta retornou resultados
         if ($resultado && $resultado->num_rows > 0) {
+            // While para ver dos resultados de cada viagem
             while ($linha = $resultado->fetch_assoc()) {
+                // Sanitização dos dados
                 $id_viagem = htmlspecialchars($linha["id_viagem"]);
                 // Formatação da hora de partida
                 $hora_partida_formatada = (new DateTime($linha["hora"]))->format("H:i");
                 // Formatação da hora de chegada diretamente do banco de dados
                 $hora_chegada_formatada = (new DateTime($linha["hora_chegada"]))->format("H:i");
-
-                echo "<div class='viagem-card'>";
-                echo "<div class='viagem-info'>";
-                // Exibindo as horas formatadas
-                echo "<div class='viagem-horas'>" . $hora_partida_formatada . " → " . $hora_chegada_formatada . "</div>";
-                // Agora 'origem' e 'destino' vêm da junção com a tabela de localidades
-                echo "<span><strong>Origem:</strong> " . htmlspecialchars($linha["origem"]) . "</span>";
-                echo "<span><strong>Destino:</strong> " . htmlspecialchars($linha["destino"]) . "</span>";
-                echo "<span><strong>Data:</strong> " . htmlspecialchars($linha["data"]) . "</span>";
-                echo "</div>";
-                echo "<div>";
-                echo "<div class='viagem-preco'>" . number_format($linha["preco"], 2, ',', '.') . " €</div>";
-                // Passando o id_viagem para a página de compra
-                echo "<a href='comprar_bilhete.php?id_viagem=" . htmlspecialchars($linha["id_viagem"]) . "' class='continuar-btn'>Continuar</a>";
-                echo "</div>";
-                echo "</div>";
+                ?>
+                <div class="viagem-card">
+                    <div class="viagem-info">
+                        <div class="viagem-horas"><?= $hora_partida_formatada ?> → <?= $hora_chegada_formatada ?></div>
+                        <span><strong>Origem:</strong> <?= htmlspecialchars($linha["origem"]) ?></span>
+                        <span><strong>Destino:</strong> <?= htmlspecialchars($linha["destino"]) ?></span>
+                        <span><strong>Data:</strong> <?= htmlspecialchars($linha["data"]) ?></span>
+                    </div>
+                    <div>
+                        <div class="viagem-preco"><?= number_format($linha["preco"], 2, ',', '.') ?> €</div>
+                        <a href="comprar_bilhete.php?id_viagem=<?= $id_viagem ?>" class="continuar-btn">Continuar</a>
+                    </div>
+                </div>
+                <?php
             }
         } else {
+            // Se não houver resultados, exibe uma mensagem
             echo "<p>Não foram encontradas viagens com os critérios de pesquisa.</p>";
         }
+        // Fecha a conexão com a base de dados
         $conn->close();
         ?>
     </div>
-
-
     <script src="jquery.min.js"></script>
     <script src="popper.min.js"></script>
     <script src="bootstrap.bundle.min.js"></script>

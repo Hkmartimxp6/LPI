@@ -3,16 +3,21 @@
 include "../basedados/basedados.h";
 include "utilizadores.php";
 
+// Inicializar a sessão PHP
 session_start();
 
+// Variável para verificar se o utilizador está autenticado
 $loggedIn = false;
+// Valor padrão para o nome do utilizador
 $nomeUtilizador = "utilizador";
 
+// Verificar se o utilizador está autenticado
 if (isset($_SESSION["utilizador"]) && is_array($_SESSION["utilizador"])) {
+    // O utilizador está autenticado
     $loggedIn = true;
+    // Atribuir o nome do utilizador da sessão
     $nomeUtilizador = $_SESSION["utilizador"]["nome"] ?? $_SESSION["utilizador"]["nome_utilizador"];
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -33,7 +38,8 @@ if (isset($_SESSION["utilizador"]) && is_array($_SESSION["utilizador"])) {
     <link rel="stylesheet" href="jquery.mCustomScrollbar.min.css">
     <link rel="stylesheet" href="owl.carousel.min.css">
     <link rel="stylesheet" href="owl.theme.default.min.css">
-    </head>
+</head>
+
 <body class="main-layout">
     <div id="sidebarUser" class="sidebar-user">
         <div class="sidebar-header">
@@ -60,6 +66,7 @@ if (isset($_SESSION["utilizador"]) && is_array($_SESSION["utilizador"])) {
                                     <li><img src="1.png" alt="#" /> Alameda Cardeal Cerejeira</li>
                                     <li><img src="2.png" alt="#" /> +351 963 961 984</li>
                                     <li><img src="3.png" alt="#" /> felixbus@gmail.com</li>
+                                    <!-- Verifica se o utilizador está autenticado para apresentar o botão de login-->
                                     <?php if ($loggedIn): ?>
                                         <li>
                                             <a href="javascript:void(0);" onclick="toggleSidebar()" title="Perfil">
@@ -108,7 +115,7 @@ if (isset($_SESSION["utilizador"]) && is_array($_SESSION["utilizador"])) {
                 </div>
             </div>
         </div>
-        </header>
+    </header>
     <section>
         <div class="banner-main">
             <img src="banner.png" alt="#" style="width: 100%; height: 100%; object-fit: cover;" />

@@ -3,13 +3,15 @@
 include "../basedados/basedados.h"; // Certifique-se de que o caminho para basedados.h está correto
 include "utilizadores.php"; // Certifique-se de que o caminho para utilizadores.php está correto
 
+// Inicializar a sessão PHP
 session_start();
 
-$loggedIn = false;
+// Variável para verificar se o utilizador está autenticado
+$autenticado = false;
 
-// Se o utilizador está com sessão iniciada, então está logado
+// Se o utilizador está com sessão iniciada, então está autenticado
 if (isset($_SESSION["utilizador"])) {
-    $loggedIn = true;
+    $autenticado = true;
 }
 
 // Inicializar variáveis de filtro e ordenação a partir dos parâmetros GET
@@ -41,12 +43,14 @@ $sql = "
 if (!empty($filtro_origem)) {
     $sql .= " AND origem_loc.localidade LIKE ?"; // adiciona isto à query 
 }
+// Verifica se o filtro de destino não está vazio
 if (!empty($filtro_destino)) {
     $sql .= " AND destino_loc.localidade LIKE ?"; // adiciona isto à query
 }
 
 // Adicionar ordenação dinâmica
 $atributo_ordenacao = "";
+// Verifica o parâmetro de ordenação e define o atributo de ordenação correspondente
 switch ($ordenar_por) {
     case 'origem':
         $atributo_ordenacao = "origem_loc.localidade";
@@ -59,30 +63,43 @@ switch ($ordenar_por) {
         break;
 }
 
-$sql .= " ORDER BY " . $atributo_ordenacao . " " . $direcao_ordenacao . ", destino_loc.localidade ASC"; // Adiciona ordenação secundária por destino para desempate
+// Adiciona a cláusula ORDER BY à query
+$sql .= " ORDER BY " . $atributo_ordenacao
+    . " " . $direcao_ordenacao
+    . ", destino_loc.localidade ASC";
 
 // Preparar a query
 $stmt = $conn->prepare($sql);
 
+// Verifica se a preparação da query foi bem-sucedida
 if ($stmt === false) {
     die("Erro na preparação da query: " . $conn->error);
 }
 
 // Ligar os parâmetros com o bind_param
-$params = [];
-$types = "";
+$parametros = [];
+// Inicializa a string de tipos para bind_param
+$tipos = "";
 
+// Verifica se o filtro de origem não está vazio
 if (!empty($filtro_origem)) {
-    $params[] = "%" . $filtro_origem . "%";
-    $types .= "s";
+    // Adiciona o filtro de origem como parâmetro
+    $parametros[] = "%" . $filtro_origem . "%";
+    // Adiciona o tipo de dado para o bind_param
+    $tipos .= "s";
 }
+// Verifica se o filtro de destino não está vazio
 if (!empty($filtro_destino)) {
-    $params[] = "%" . $filtro_destino . "%";
-    $types .= "s";
+    // Adiciona o filtro de destino como parâmetro
+    $parametros[] = "%" . $filtro_destino . "%";
+    // Adiciona o tipo de dado para o bind_param
+    $tipos .= "s";
 }
 
-if (!empty($params)) {
-    $stmt->bind_param($types, ...$params);
+// Verifica se há parâmetros para bind_param
+if (!empty($parametros)) {
+    // Faz o bind dos parâmetros à query
+    $stmt->bind_param($tipos, ...$parametros);
 }
 
 // Executar a query
@@ -90,7 +107,6 @@ $stmt->execute();
 
 // Obter o resultado
 $resultado = $stmt->get_result();
-
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -122,16 +138,19 @@ $resultado = $stmt->get_result();
             justify-content: space-between;
             align-items: center;
         }
+
         .rota-info {
             display: flex;
             flex-direction: row;
             align-items: center;
             gap: 20px;
         }
+
         .rota-info span {
             margin: 0;
             font-size: 18px;
         }
+
         .procurar-btn {
             background-color: #007bff;
             color: white;
@@ -140,35 +159,43 @@ $resultado = $stmt->get_result();
             border-radius: 6px;
             font-weight: bold;
         }
+
         .procurar-btn:hover {
             background-color: #0056b3;
         }
+
         .filter-form {
             background: #fff;
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 30px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         .filter-form .form-group {
             margin-bottom: 15px;
         }
+
         .filter-form .btn-primary {
             background-color: #28a745;
             border-color: #28a745;
         }
+
         .filter-form .btn-primary:hover {
             background-color: #218838;
             border-color: #1e7e34;
         }
+
         /* Novos estilos para a ordenação */
         .sort-options {
             margin-bottom: 20px;
             display: flex;
             gap: 15px;
             align-items: center;
-            flex-wrap: wrap; /* Permite que os botões quebrem a linha em telas pequenas */
+            flex-wrap: wrap;
+            /* Permite que os botões quebrem a linha em telas pequenas */
         }
+
         .sort-options a {
             text-decoration: none;
             padding: 8px 15px;
@@ -177,20 +204,24 @@ $resultado = $stmt->get_result();
             color: #333;
             background-color: #f8f9fa;
         }
+
         .sort-options a.active {
             background-color: #007bff;
             color: white;
             border-color: #007bff;
         }
+
         .sort-options a:hover:not(.active) {
             background-color: #e2e6ea;
         }
+
         .sort-options .sort-label {
             font-weight: bold;
             margin-right: 5px;
         }
     </style>
 </head>
+
 <body class="main-layout">
     <div id="sidebarUser" class="sidebar-user">
         <div class="sidebar-header">
@@ -217,7 +248,7 @@ $resultado = $stmt->get_result();
                                     <li><img src="1.png" alt="#" /> Alameda Cardeal Cerejeira</li>
                                     <li><img src="2.png" alt="#" /> +351 963 961 984</li>
                                     <li><img src="3.png" alt="#" /> felixbus@gmail.com</li>
-                                    <?php if ($loggedIn): ?>
+                                    <?php if ($autenticado): ?>
                                         <li>
                                             <a href="javascript:void(0);" onclick="toggleSidebar()" title="Perfil">
                                                 <img src="icon_utilizador.png" alt="Ícone do Utilizador"
@@ -256,7 +287,8 @@ $resultado = $stmt->get_result();
                                         <li> <a href="index.php">Início</a> </li>
                                         <li> <a href="sobre_nos.php">Sobre nós</a> </li>
                                         <li><a href="viagens.php">Viagens</a></li>
-                                        <li class="active"><a href="rotas.php">Rotas</a></li> <li><a href="#contact">Contacta-nos</a></li>
+                                        <li class="active"><a href="rotas.php">Rotas</a></li>
+                                        <li><a href="#contact">Contacta-nos</a></li>
                                     </ul>
                                 </nav>
                             </div>
@@ -299,12 +331,16 @@ $resultado = $stmt->get_result();
             <span class="sort-label">Ordenar por:</span>
             <?php
             // Função auxiliar para ordenação
-            function getSortUrlRotas($param, $current_ordenar_por, $current_direcao_ordenacao, $filtro_origem, $filtro_destino) {
+            function obterUrlOrdenacaoRotas($parametro, $ordenar_atual, $direcao_atual, $filtro_origem, $filtro_destino)
+            {
+                // Gera a ordenação com base no parâmetro e direção atuais
                 $direcao = 'ASC';
-                if ($current_ordenar_por == $param && $current_direcao_ordenacao == 'ASC') {
+                // Se o parâmetro atual for igual ao parâmetro passado, alterna a direção
+                if ($ordenar_atual == $parametro && $direcao_atual == 'ASC') {
                     $direcao = 'DESC'; // Alternar para DESC se já estiver ASC no mesmo parâmetro
                 }
-                $url = 'rotas.php?ordenar_por=' . $param . '&direcao=' . $direcao;
+                // Monta a URL com os parâmetros de ordenação e filtros
+                $url = 'rotas.php?ordenar_por=' . $parametro . '&direcao=' . $direcao;
                 if (!empty($filtro_origem)) {
                     $url .= '&origem=' . urlencode($filtro_origem);
                 }
@@ -315,38 +351,40 @@ $resultado = $stmt->get_result();
             }
 
             // Classes 'active' para os botões de ordenação atuais
-            $class_origem = ($ordenar_por == 'origem') ? 'active' : '';
-            $class_destino = ($ordenar_por == 'destino') ? 'active' : '';
+            $classe_origem = ($ordenar_por == 'origem') ? 'active' : '';
+            $classe_destino = ($ordenar_por == 'destino') ? 'active' : '';
 
             // Ícones de direção (opcional, para feedback visual)
-            $icon_origem = ($ordenar_por == 'origem' && $direcao_ordenacao == 'ASC') ? ' &#9650;' : (($ordenar_por == 'origem' && $direcao_ordenacao == 'DESC') ? ' &#9660;' : '');
-            $icon_destino = ($ordenar_por == 'destino' && $direcao_ordenacao == 'ASC') ? ' &#9650;' : (($ordenar_por == 'destino' && $direcao_ordenacao == 'DESC') ? ' &#9660;' : '');
+            $icone_origem = ($ordenar_por == 'origem' && $direcao_ordenacao == 'ASC') ? ' &#9650;' : (($ordenar_por == 'origem' && $direcao_ordenacao == 'DESC') ? ' &#9660;' : '');
+            $icone_destino = ($ordenar_por == 'destino' && $direcao_ordenacao == 'ASC') ? ' &#9650;' : (($ordenar_por == 'destino' && $direcao_ordenacao == 'DESC') ? ' &#9660;' : '');
             ?>
-            <a href="<?php echo getSortUrlRotas('origem', $ordenar_por, $direcao_ordenacao, $filtro_origem, $filtro_destino); ?>" class="<?php echo $class_origem; ?>">Origem<?php echo $icon_origem; ?></a>
-            <a href="<?php echo getSortUrlRotas('destino', $ordenar_por, $direcao_ordenacao, $filtro_origem, $filtro_destino); ?>" class="<?php echo $class_destino; ?>">Destino<?php echo $icon_destino; ?></a>
+            <a href="<?php echo obterUrlOrdenacaoRotas('origem', $ordenar_por, $direcao_ordenacao, $filtro_origem, $filtro_destino); ?>" class="<?php echo $classe_origem; ?>">Origem<?php echo $icone_origem; ?></a>
+            <a href="<?php echo obterUrlOrdenacaoRotas('destino', $ordenar_por, $direcao_ordenacao, $filtro_origem, $filtro_destino); ?>" class="<?php echo $classe_destino; ?>">Destino<?php echo $icone_destino; ?></a>
         </div>
 
-        
+
         <?php
 
         // Mostra as rotas filtradas
+        // Verifica se o resultado contém linhas
         if ($resultado && $resultado->num_rows > 0) {
+            // Itera sobre os resultados e exibe as rotas
             while ($linha = $resultado->fetch_assoc()) {
                 $id_rota = htmlspecialchars($linha["id_rota"]);
                 echo "<div class='rota-card'>";
-                    echo "<div class='rota-info'>";
-                        echo "<span><strong>Origem:</strong> " . htmlspecialchars($linha["origem"]) . "</span>";
-                        echo "<span><strong>Destino:</strong> " . htmlspecialchars($linha["destino"]) . "</span>";
-                    echo "</div>";
-                    echo "<div>";
-                    echo "<a href='viagens.php?origem=" . urlencode($linha["origem"]) . "&destino=" . urlencode($linha["destino"]) . "' class='procurar-btn'>Procurar Viagens</a>";
-                    echo "</div>";
+                echo "<div class='rota-info'>";
+                echo "<span><strong>Origem:</strong> " . htmlspecialchars($linha["origem"]) . "</span>";
+                echo "<span><strong>Destino:</strong> " . htmlspecialchars($linha["destino"]) . "</span>";
+                echo "</div>";
+                echo "<div>";
+                echo "<a href='viagens.php?origem=" . urlencode($linha["origem"]) . "&destino=" . urlencode($linha["destino"]) . "' class='procurar-btn'>Procurar Viagens</a>";
+                echo "</div>";
                 echo "</div>";
             }
         } else {
             echo "<p>Não foram encontradas rotas.</p>";
         }
-        
+        // Fecha a declaração e o resultado
         $conn->close();
         ?>
     </div>
