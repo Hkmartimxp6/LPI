@@ -12,20 +12,19 @@ if (isset($_SESSION["utilizador"])) {
     $loggedIn = true;
 }
 
-// 1. Inicializar variáveis de filtro a partir dos parâmetros GET
-// Usamos o operador ?? (null coalescing) para definir uma string vazia se o parâmetro não existir
+// Inicializar variáveis de filtro a partir dos parâmetros GET
 $filtro_origem = $_GET['origem'] ?? '';
 $filtro_destino = $_GET['destino'] ?? '';
 $filtro_data = $_GET['data'] ?? '';
 
-// 2. Construir a query SQL dinamicamente
+// Construir a query SQL dinamicamente
 // Começamos com uma query base e adicionamos condições WHERE se os filtros existirem
 $sql = "
     SELECT
         v.id_viagem,
         v.data,
         v.hora,
-        v.hora_chegada, -- ADICIONADO AQUI: Selecionando a nova coluna
+        v.hora_chegada,
         v.preco,
         origem_loc.localidade AS origem,
         destino_loc.localidade AS destino
@@ -33,8 +32,9 @@ $sql = "
     INNER JOIN rota r ON v.id_rota = r.id_rota
     INNER JOIN localidade origem_loc ON r.id_origem = origem_loc.id_localidade
     INNER JOIN localidade destino_loc ON r.id_destino = destino_loc.id_localidade
-    WHERE 1=1
+    WHERE r.estado = 1
 ";
+
 
 // Adicionar condições à query se os filtros estiverem preenchidos
 if (!empty($filtro_origem)) {
@@ -121,25 +121,35 @@ $resultado = $stmt->get_result();
             justify-content: space-between;
             align-items: center;
         }
+
         .viagem-info {
             display: flex;
-            flex-direction: row; /* Alterado para row para exibição horizontal */
-            align-items: center; /* Alinha os itens verticalmente ao centro */
-            gap: 20px; /* Espaço entre os itens de informação */
+            flex-direction: row;
+            /* Alterado para row para exibição horizontal */
+            align-items: center;
+            /* Alinha os itens verticalmente ao centro */
+            gap: 20px;
+            /* Espaço entre os itens de informação */
         }
+
         .viagem-info span {
-            margin: 0; /* Remove margem vertical dos spans individuais */
+            margin: 0;
+            /* Remove margem vertical dos spans individuais */
         }
+
         .viagem-horas {
             font-weight: bold;
             font-size: 18px;
-            margin-right: 100px; /* Espaço entre horas e outras infos */
+            margin-right: 100px;
+            /* Espaço entre horas e outras infos */
         }
+
         .viagem-preco {
             font-size: 20px;
             font-weight: bold;
             color: green;
         }
+
         .continuar-btn {
             background-color: #4CAF50;
             color: white;
@@ -148,15 +158,20 @@ $resultado = $stmt->get_result();
             border-radius: 6px;
             font-weight: bold;
         }
+
         .continuar-btn:hover {
             background-color: #45a049;
         }
     </style>
 </head>
+
 <body class="main-layout">
     <div id="sidebarUser" class="sidebar-user">
         <div class="sidebar-header">
-            <span>Olá, <?php echo $_SESSION["utilizador"] ?? "utilizador" ?></span>
+            <span>
+                Olá, <?= htmlspecialchars($_SESSION["utilizador"]["nome"] ?? $_SESSION["utilizador"]["nome_utilizador"]) ?>
+            </span>
+
             <button onclick="toggleSidebar()" class="close-btn">×</button>
         </div>
         <ul class="sidebar-menu">
@@ -240,19 +255,19 @@ $resultado = $stmt->get_result();
                 $hora_chegada_formatada = (new DateTime($linha["hora_chegada"]))->format("H:i");
 
                 echo "<div class='viagem-card'>";
-                    echo "<div class='viagem-info'>";
-                    // Exibindo as horas formatadas
-                    echo "<div class='viagem-horas'>" . $hora_partida_formatada . " → " . $hora_chegada_formatada . "</div>";
-                    // Agora 'origem' e 'destino' vêm da junção com a tabela de localidades
-                    echo "<span><strong>Origem:</strong> " . htmlspecialchars($linha["origem"]) . "</span>";
-                    echo "<span><strong>Destino:</strong> " . htmlspecialchars($linha["destino"]) . "</span>";
-                    echo "<span><strong>Data:</strong> " . htmlspecialchars($linha["data"]) . "</span>";
-                    echo "</div>";
-                    echo "<div>";
-                    echo "<div class='viagem-preco'>" . number_format($linha["preco"], 2, ',', '.') . " €</div>";
-                    // Passando o id_viagem para a página de compra
-                    echo "<a href='comprar_bilhete.php?id_viagem=" . htmlspecialchars($linha["id_viagem"]) . "' class='continuar-btn'>Continuar</a>";
-                    echo "</div>";
+                echo "<div class='viagem-info'>";
+                // Exibindo as horas formatadas
+                echo "<div class='viagem-horas'>" . $hora_partida_formatada . " → " . $hora_chegada_formatada . "</div>";
+                // Agora 'origem' e 'destino' vêm da junção com a tabela de localidades
+                echo "<span><strong>Origem:</strong> " . htmlspecialchars($linha["origem"]) . "</span>";
+                echo "<span><strong>Destino:</strong> " . htmlspecialchars($linha["destino"]) . "</span>";
+                echo "<span><strong>Data:</strong> " . htmlspecialchars($linha["data"]) . "</span>";
+                echo "</div>";
+                echo "<div>";
+                echo "<div class='viagem-preco'>" . number_format($linha["preco"], 2, ',', '.') . " €</div>";
+                // Passando o id_viagem para a página de compra
+                echo "<a href='comprar_bilhete.php?id_viagem=" . htmlspecialchars($linha["id_viagem"]) . "' class='continuar-btn'>Continuar</a>";
+                echo "</div>";
                 echo "</div>";
             }
         } else {
@@ -262,7 +277,7 @@ $resultado = $stmt->get_result();
         ?>
     </div>
 
-    
+
     <script src="jquery.min.js"></script>
     <script src="popper.min.js"></script>
     <script src="bootstrap.bundle.min.js"></script>
@@ -298,4 +313,5 @@ $resultado = $stmt->get_result();
         }
     </script>
 </body>
+
 </html>

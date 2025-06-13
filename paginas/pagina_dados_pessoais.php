@@ -1,30 +1,18 @@
 <?php
+include "../basedados/basedados.h";
 session_start();
 
 if (!isset($_SESSION["utilizador"])) {
-    echo "<script>window.location.href = 'logout.php';</script>";
+    header("Location: logout.php");
     exit();
 }
 
-include "../basedados/basedados.h";
-
-$nome_utilizador = $_SESSION["utilizador"];
-
-$sql = "SELECT * FROM utilizador WHERE nome_utilizador = ?";
-$stmt = mysqli_prepare($conn, $sql);
-mysqli_stmt_bind_param($stmt, "s", $nome_utilizador);
-mysqli_stmt_execute($stmt);
-$resultado = mysqli_stmt_get_result($stmt);
-
-if (!$resultado || mysqli_num_rows($resultado) == 0) {
-    die("Erro ao obter os dados do utilizador.");
-}
-
-$utilizador = mysqli_fetch_assoc($resultado);
+$utilizador = $_SESSION["utilizador"];
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-pt">
+
 <head>
     <meta charset="UTF-8">
     <title>Dados Pessoais</title>
@@ -34,20 +22,24 @@ $utilizador = mysqli_fetch_assoc($resultado);
             margin: 20px auto;
             width: 60%;
         }
+
         td, th {
             padding: 10px;
             border: 1px solid #333;
             text-align: left;
         }
+
         h2 {
             text-align: center;
         }
+
         .botoes {
             display: flex;
             justify-content: center;
             gap: 10px;
             margin-top: 20px;
         }
+
         input[type="submit"] {
             padding: 10px 20px;
             background-color: #007BFF;
@@ -56,11 +48,13 @@ $utilizador = mysqli_fetch_assoc($resultado);
             cursor: pointer;
             border-radius: 10px;
         }
+
         input[type="submit"]:hover {
             background-color: #0056b3;
         }
     </style>
 </head>
+
 <body>
 
 <h2>Dados Pessoais do Utilizador</h2>
@@ -78,7 +72,7 @@ $utilizador = mysqli_fetch_assoc($resultado);
     <form action="editar_dados.php" method="post">
         <input type="submit" value="Editar Dados">
     </form>
-        <form action="pagina_utilizador.php">
+    <form action="pagina_utilizador.php">
         <input type="submit" value="Voltar">
     </form>
 </div>

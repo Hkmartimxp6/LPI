@@ -6,10 +6,11 @@ include "utilizadores.php";
 session_start();
 
 $loggedIn = false;
+$nomeUtilizador = "utilizador";
 
-// Se o utilizador está com sessão iniciada, então está logado
-if (isset($_SESSION["utilizador"])) {
+if (isset($_SESSION["utilizador"]) && is_array($_SESSION["utilizador"])) {
     $loggedIn = true;
+    $nomeUtilizador = $_SESSION["utilizador"]["nome"] ?? $_SESSION["utilizador"]["nome_utilizador"];
 }
 
 ?>
@@ -36,7 +37,7 @@ if (isset($_SESSION["utilizador"])) {
 <body class="main-layout">
     <div id="sidebarUser" class="sidebar-user">
         <div class="sidebar-header">
-            <span>Olá, <?php echo $_SESSION["utilizador"] ?? "utilizador" ?></span>
+            <span>Olá, <?php echo htmlspecialchars($nomeUtilizador); ?></span>
             <button onclick="toggleSidebar()" class="close-btn">×</button>
         </div>
         <ul class="sidebar-menu">

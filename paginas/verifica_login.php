@@ -12,18 +12,16 @@ $user = $_POST["utilizador"];
 $pass = md5($_POST["password"]);
 $nao_valido = CLIENTE_NAO_VALIDO;
 
-// Usa prepared statement para segurança e ver erros melhor
 $stmt = $conn->prepare("SELECT * FROM utilizador WHERE nome_utilizador = ? AND password = ?");
 $stmt->bind_param("ss", $user, $pass);
 $stmt->execute();
 $result = $stmt->get_result();
-$num = $result->num_rows;
 
-if ($num === 1) {
+if ($result->num_rows === 1) {
     $user_info = $result->fetch_assoc();
 
     if ($user_info['tipo_utilizador'] != $nao_valido) {
-        $_SESSION["utilizador"] = $user;
+        $_SESSION["utilizador"] = $user_info; // ✅ guarda o array completo
         echo "Login efetuado com sucesso, vai ser redirecionado para a página inicial...";
         header("refresh:2; url=index.php");
         exit();

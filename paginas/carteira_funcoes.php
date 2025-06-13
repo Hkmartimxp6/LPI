@@ -1,4 +1,9 @@
 <?php
+define('ADICIONAR_SALDO', 1);
+define('RETIRAR_SALDO', 2);
+define('COMPRAR_BILHETE', 3);
+define('VENDER_BILHETE', 4);
+
 /**
  * Adiciona saldo à carteira de um utilizador e regista a transação.
  *
@@ -13,7 +18,7 @@ function adicionarSaldo(mysqli $conn, int $id_carteira, float $valor, int $id_op
     // Inicia uma transação para garantir a atomicidade das operações
     $conn->begin_transaction();
     try {
-        // 1. Obter o saldo atual, bloqueando a linha para evitar problemas de concorrência
+        // Obter o saldo atual, bloqueando a linha para evitar problemas de concorrência
         $stmt_get_saldo = $conn->prepare("SELECT saldo FROM carteira WHERE id_carteira = ? FOR UPDATE");
         if (!$stmt_get_saldo) {
             throw new Exception("Erro ao preparar query para obter saldo: " . $conn->error);
@@ -30,7 +35,7 @@ function adicionarSaldo(mysqli $conn, int $id_carteira, float $valor, int $id_op
         $novo_saldo = $saldo_anterior + $valor;
         $stmt_get_saldo->close();
 
-        // 2. Atualizar o saldo na tabela 'carteira'
+        // Atualizar o saldo na tabela 'carteira'
         $stmt_update_saldo = $conn->prepare("UPDATE carteira SET saldo = ? WHERE id_carteira = ?");
         if (!$stmt_update_saldo) {
             throw new Exception("Erro ao preparar query para atualizar saldo: " . $conn->error);
@@ -177,34 +182,4 @@ function getSaldoAtual(mysqli $conn, int $id_carteira): float
     $stmt->close();
     return 0.0;
 }
-
-/**
- * Obtém os IDs das operações 'Adicionar Saldo' e 'Retirar Saldo'.
- *
- * @param mysqli $conn A conexão com a base de dados.
- * @return array Um array associativo com 'adicionar' e 'retirar' IDs ou null se não encontrados.
- */
-function getOperacaoIds(mysqli $conn): array
-{
-    $id_operacao_adicionar_saldo = null;
-    $id_operacao_retirar_saldo = null;
-
-    $stmt = $conn->prepare("SELECT id_operacao, descricao FROM operacao WHERE descricao IN ('Adicionar Saldo', 'Retirar Saldo')");
-    if ($stmt) {
-        $stmt->execute();
-        $result = $stmt->get_result();
-        while ($row = $result->fetch_assoc()) {
-            if ($row['descricao'] == 'Adicionar Saldo') {
-                $id_operacao_adicionar_saldo = $row['id_operacao'];
-            } elseif ($row['descricao'] == 'Retirar Saldo') {
-                $id_operacao_retirar_saldo = $row['id_operacao'];
-            }
-        }
-        $stmt->close();
-    } else {
-        error_log("Erro ao preparar query para obter IDs de operações: " . $conn->error);
-    }
-    return ['adicionar' => $id_operacao_adicionar_saldo, 'retirar' => $id_operacao_retirar_saldo];
-}
-
 ?>

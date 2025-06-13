@@ -8,9 +8,10 @@ if (!isset($_SESSION["utilizador"])) {
 
 include "../basedados/basedados.h";
 
-$nome_utilizador = $_SESSION["utilizador"];
+// Obter o nome de utilizador da sessão
+$nome_utilizador = $_SESSION["utilizador"]["nome_utilizador"];
 
-// Inicializar variáveis para feedback
+// Inicializar variáveis de feedback
 $erro = "";
 $sucesso = "";
 
@@ -21,9 +22,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $morada = $_POST["morada"] ?? "";
     $telemovel = $_POST["telemovel"] ?? "";
 
-    // Validações básicas (podes melhorar)
+    // Validações básicas
     if (empty($nome) || empty($email)) {
-        $erro = "Por favor preencha os campos obrigatórios: Nome e Email.";
+        $erro = "Preencha os campos: Nome e Email.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $erro = "Por favor insira um email válido.";
     } else {
@@ -33,21 +34,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if (mysqli_stmt_execute($stmt_update)) {
             $sucesso = "Dados atualizados com sucesso!";
-            // Atualiza variáveis para manter formulário preenchido
+
+            // Atualiza os dados na variável local para manter o formulário preenchido
             $utilizador = [
+                "nome_utilizador" => $nome_utilizador,
                 "nome" => $nome,
                 "email" => $email,
                 "morada" => $morada,
-                "telemovel" => $telemovel,
-                "nome_utilizador" => $nome_utilizador
+                "telemovel" => $telemovel
             ];
+
+            // Atualiza também a sessão com os dados novos
+            $_SESSION["utilizador"]["nome"] = $nome;
+            $_SESSION["utilizador"]["email"] = $email;
+            $_SESSION["utilizador"]["morada"] = $morada;
+            $_SESSION["utilizador"]["telemovel"] = $telemovel;
+
         } else {
             $erro = "Erro ao atualizar os dados: " . mysqli_error($conn);
         }
     }
 }
 
-// Se não for POST ou se houve erro, carregar dados atuais para preencher o formulário
+// Se não for POST ou se houve erro, carrega os dados atuais do utilizador
 if ($_SERVER["REQUEST_METHOD"] !== "POST" || $erro) {
     $sql = "SELECT * FROM utilizador WHERE nome_utilizador = ?";
     $stmt = mysqli_prepare($conn, $sql);
@@ -156,7 +165,7 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST" || $erro) {
 
     <div class="botoes">
         <input type="submit" value="Guardar Alterações">
-        <a href="pagina_dados_pessoais.php" class="voltar">Cancelar</a>
+        <a href="pagina_dados_pessoais.php" class="voltar">Voltar</a>
     </div>
 </form>
 
