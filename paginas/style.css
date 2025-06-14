@@ -515,8 +515,8 @@ a.readmore_bt {
 .logo {
      float: left;
      position: relative;
-     top: -80px;
-     left: -30px;
+     top: -120px;
+     left: -50px;
 }
 
 nav.main-menu {
@@ -545,14 +545,19 @@ ul.top_icon li:last-child {
 ul.top_icon li a {
      color: #fff;
 }
-
 .menu-area-main li:hover a,
 .menu-area-main li:focus a {
      color: #000;
 }
-
 .menu-area-main li.active a {
      color: #000;
+}
+.main-menu {
+     float: right;
+     width: 100%;
+     position: relative;
+     left: 200px;
+     bottom: 55px;
 }
 
 .right_cart_section {
@@ -1708,14 +1713,15 @@ input[type="radio"] .styled:checked+label::after {
 }
 
 .banner-main .text-bg h1 { /* viaja da melhor maneira */
-     font-size: 90px;
+     font-size: 80px;
      line-height: 108px;
      text-transform: uppercase;
      color: #0adef8;
      font-weight: bold;
-     padding-bottom: 35px;
+     padding-bottom: 10px;
      padding-top: 25px;
      margin-top: 8%;
+     top: 120px;
 }
 .white {
      color: #fff;

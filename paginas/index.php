@@ -93,7 +93,7 @@ if (isset($_SESSION["utilizador"]) && is_array($_SESSION["utilizador"])) {
                         <div class="full">
                             <div class="center-desk">
                                 <div class="logo">
-                                    <a href="index.php"><img src="logo.png" style="width:300px;" alt="#"></a>
+                                    <a href="index.php"><img src="logo.png" alt="#"></a>
                                 </div>
                             </div>
                         </div>
@@ -105,7 +105,7 @@ if (isset($_SESSION["utilizador"]) && is_array($_SESSION["utilizador"])) {
                                     <ul class="menu-area-main">
                                         <li> <a href="rotas.php">Rotas</a> </li>
                                         <li><a href="viagens.php">Viagens</a></li>
-                                        <li> <a href="sobre_nos.php">Sobre nós</a> </li>
+                                        <li> <a href="carteira.php">Carteira</a> </li>
                                         <li><a href="#contact">Contacta-nos</a></li>
                                     </ul>
                                 </nav>
@@ -121,9 +121,9 @@ if (isset($_SESSION["utilizador"]) && is_array($_SESSION["utilizador"])) {
             <img src="banner.png" alt="#" style="width: 100%; height: 100%; object-fit: cover;" />
             <div class="text-bg">
                 <h1 style="padding-top: 250px;">Viaja da Melhor<br><strong class="white">Maneira!</strong></h1>
-                <div class="container" style="padding-bottom: 100px;">
+                <div class="container" style="padding-bottom: 150px;">
                     <div class="row justify-content-center">
-                        <div class="col-lg-12 col-md-10 col-sm-12" style="padding-bottom: 70px;">
+                        <div class="col-lg-12 col-md-10 col-sm-12" style="padding-bottom: 150px;">
                             <form class="main-form" action="viagens.php" method="GET">
                                 <h3 id="procurar">Encontra a tua viagem</h3>
                                 <div class="row">

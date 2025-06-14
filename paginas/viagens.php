@@ -234,10 +234,10 @@ $resultado = $stmt->get_result();
                             <div class="limit-box">
                                 <nav class="main-menu">
                                     <ul class="menu-area-main">
-                                        <li class="active"> <a href="index.php">Início</a> </li>
-                                        <li> <a href="sobre_nos.php">Sobre nós</a> </li>
-                                        <li><a href="viagens.php">Viagens</a></li>
-                                        <li><a href="#contact">Contacta-nos</a></li>
+                                        <li> <a href="index.php">Início</a> </li>
+                                        <li> <a href="rotas.php">Rotas</a> </li>
+                                        <li class="active"> <a href="viagens.php">Viagens</a></li>
+                                        <li> <a href="carteira.php">Carteira</a> </li>
                                     </ul>
                                 </nav>
                             </div>
