@@ -20,7 +20,7 @@ $filtro_destino = $_GET['destino'] ?? '';
 $filtro_data = $_GET['data'] ?? '';
 
 // Construir a query SQL dinamicamente
-// Começamos com uma query base e adicionamos condições WHERE se os filtros existirem
+// Query base
 $sql = "
     SELECT
         v.id_viagem,
@@ -40,7 +40,7 @@ $sql = "
 
 // Adicionar condições à query se os filtros estiverem preenchidos
 if (!empty($filtro_origem)) {
-    // Usar LIKE para pesquisa parcial (correspondência de substring)
+    // LIKE para pesquisa parcial (correspondência de substring)
     // Os '%' serão adicionados no bind_param para evitar SQL Injection
     $sql .= " AND origem_loc.localidade LIKE ?";
 }
