@@ -10,9 +10,13 @@ session_start();
 $loggedIn = false;
 
 // Se o utilizador está com sessão iniciada, então está logado
-if (isset($_SESSION["utilizador"])) {
-    $loggedIn = true;
+if (!isset($_SESSION["utilizador"])) {
+    header("Location: index.php");
+    exit();
 }
+
+// Se a sessão do utilizador está definida, então o utilizador está logado
+$loggedIn = true;
 
 // Inicializar variáveis de filtro a partir dos parâmetros GET
 $filtro_origem = $_GET['origem'] ?? '';
