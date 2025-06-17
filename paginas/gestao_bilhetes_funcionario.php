@@ -12,7 +12,7 @@ if (!isset($_SESSION['utilizador']) ||
 
     die("Acesso reservado apenas a funcionários.");
 }
-
+// Variáveis de feedback 
 $erro = false;
 $mensagem = "";
 
@@ -25,7 +25,10 @@ $clientes = $clientes_stmt->fetch_all(MYSQLI_ASSOC);
 
 // Anular bilhete
 if (isset($_GET['anular']) && $id_cliente) {
-    $id_bilhete = intval($_GET['anular']);
+    
+    $id_bilhete = $_GET['anular'];
+
+    // Começa a transação
     $conn->begin_transaction();
 
     try {
@@ -34,9 +37,13 @@ if (isset($_GET['anular']) && $id_cliente) {
         $stmt->bind_param("i", $id_cliente);
         $stmt->execute();
         $res = $stmt->get_result();
+
+        // Verificar se o cliente existe
         if ($res->num_rows === 0) {
             throw new Exception("Cliente não encontrado.");
         }
+
+        // Obter id_carteira do cliente
         $cliente_data = $res->fetch_assoc();
         $id_carteira = $cliente_data['id_carteira'];
 
@@ -49,10 +56,12 @@ if (isset($_GET['anular']) && $id_cliente) {
         $stmt->execute();
         $res = $stmt->get_result();
 
+        // Verificar se o bilhete existe e pertence ao cliente
         if ($res->num_rows === 0) {
             throw new Exception("Bilhete não encontrado.");
         }
 
+        // Obter dados da viagem e preço
         $viagem = $res->fetch_assoc();
         $preco = $viagem['preco'];
 
@@ -73,6 +82,7 @@ if (isset($_GET['anular']) && $id_cliente) {
             throw new Exception($res_empresa['message']);
         }
 
+        // Commit da transação de reembolso
         $conn->commit();
         $mensagem = "Bilhete anulado com sucesso e valor reembolsado ao cliente.";
     } catch (Exception $e) {
@@ -85,18 +95,22 @@ if (isset($_GET['anular']) && $id_cliente) {
 // Se foi selecionado um cliente, obter os seus bilhetes e saldo
 $bilhetes = [];
 $saldo_atual = null;
+
+// Verifica se o ID do cliente foi fornecido
 if ($id_cliente) {
-    // Saldo
+    // Preparar a consulta para obter a carteira e depois o saldo atual do cliente
     $stmt = $conn->prepare("SELECT id_carteira FROM utilizador WHERE id_utilizador = ?");
     $stmt->bind_param("i", $id_cliente);
     $stmt->execute();
     $res = $stmt->get_result();
+
+    // Se conseguiu obter o id_carteira, guarda o saldo atual
     if ($res->num_rows > 0) {
         $id_carteira = $res->fetch_assoc()['id_carteira'];
         $saldo_atual = getSaldoAtual($conn, $id_carteira);
     }
 
-    // Bilhetes
+    // Query para obter os bilhetes do cliente selecionado
     $stmt = $conn->prepare("
         SELECT b.id_bilhete, b.data_compra, b.identificador,
                v.data, v.hora, v.hora_chegada, v.preco,
@@ -133,9 +147,11 @@ if ($id_cliente) {
         <label for="cliente">Selecionar cliente:</label>
         <select name="cliente" id="cliente" class="form-control" onchange="this.form.submit()">
             <option value="">-- Escolher --</option>
+            <!-- Loop pelos clientes para preencher o dropdown -->
             <?php foreach ($clientes as $cliente): ?>
-                <option value="<?= $cliente['id_utilizador'] ?>" <?= ($id_cliente == $cliente['id_utilizador']) ? 'selected' : '' ?>>
-                    <?= htmlspecialchars($cliente['nome_utilizador']) ?>
+                <option value="<?= $cliente['id_utilizador'] ?>" 
+                               <?= ($id_cliente == $cliente['id_utilizador']) ? 'selected' : '' ?>>
+                               <?= htmlspecialchars($cliente['nome_utilizador']) ?>
                 </option>
             <?php endforeach; ?>
         </select>
@@ -159,6 +175,7 @@ if ($id_cliente) {
                 </tr>
             </thead>
             <tbody>
+                <!-- Loop pelos bilhetes do cliente -->
                 <?php while ($row = $bilhetes->fetch_assoc()): ?>
                     <tr>
                         <td><?= htmlspecialchars($row['identificador']) ?></td>
@@ -169,11 +186,15 @@ if ($id_cliente) {
                         <td><?= htmlspecialchars((new DateTime($row['hora_chegada']))->format("H:i")) ?></td>
                         <td><?= number_format($row['preco'], 2, ',', '.') ?> €</td>
                         <td><?= (new DateTime($row['data_compra']))->format("d/m/Y H:i") ?></td>
-                        <td><a href="?cliente=<?= $id_cliente ?>&anular=<?= $row['id_bilhete'] ?>" class="btn btn-sm btn-danger">Anular</a></td>
+                        <td><a href="?cliente= <?= $id_cliente ?>
+                                     &anular=<?= $row['id_bilhete'] ?>" 
+                               class="btn btn-sm btn-danger">Anular</a>
+                        </td>
                     </tr>
                 <?php endwhile; ?>
             </tbody>
         </table>
+    <!-- Se não houver bilhetes -->
     <?php elseif ($id_cliente): ?>
         <p>Este cliente não tem bilhetes.</p>
     <?php endif; ?>

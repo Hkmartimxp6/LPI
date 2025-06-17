@@ -30,10 +30,14 @@ if ($pass !== $confirmar_pass) {
 
 // Query para verificar se o utilizador já existe
 $stmt_check = $conn->prepare("SELECT nome_utilizador FROM utilizador WHERE nome_utilizador = ?");
+// Faz o bind da variável $user à query
 $stmt_check->bind_param("s", $user);
+// Executa a query
 $stmt_check->execute();
+// Obtém o resultado da query
 $result_check = $stmt_check->get_result();
 
+// Verifica se o utilizador já existe
 if ($result_check->num_rows > 0) {
     echo "Nome de utilizador já existe. Redirecionando para o registo...";
     header("refresh:3; url=registo.php");
@@ -41,29 +45,39 @@ if ($result_check->num_rows > 0) {
     $conn->close();
     exit();
 }
+// Fecha o statement de verificação
 $stmt_check->close();
 
 // Obter o último id da carteira (max + 1)
 $res = $conn->query("SELECT MAX(id_carteira) AS max_id FROM carteira");
+// Verifica se a query foi bem sucedida
 if (!$res) {
     echo "Erro ao obter o último ID da carteira: " . $conn->error;
     $conn->close();
     exit();
 }
+// Busca o resultado da query
 $row = $res->fetch_assoc();
+// Verifica se o resultado é válido
 $new_id_carteira = $row['max_id'] + 1;
 
-// Criar nova carteira
+// Criar nova carteira e iniciar a transação
 $conn->begin_transaction();
 
+// Preparar a query para inserir a nova carteira
 $stmt_carteira = $conn->prepare("INSERT INTO carteira (id_carteira, saldo) VALUES (?, 0)");
+// Verifica se a preparação da query não foi bem sucedida
+// imprime uma mensagem de erro e reverte a transação
 if ($stmt_carteira === false) {
     echo "Erro na preparação da query da carteira: " . $conn->error;
     $conn->rollback();
     $conn->close();
     exit();
 }
+// Faz o bind do novo id da carteira à query
 $stmt_carteira->bind_param("i", $new_id_carteira);
+
+// Se a execução da query falhar, imprime uma mensagem de erro e reverte a transação
 if (!$stmt_carteira->execute()) {
     echo "Erro ao criar carteira: " . $stmt_carteira->error;
     $stmt_carteira->close();
@@ -74,17 +88,23 @@ if (!$stmt_carteira->execute()) {
 $stmt_carteira->close();
 
 // Inserir o novo utilizador com os dados mínimos
-$sql_insert_user = "INSERT INTO utilizador (password, nome_utilizador, tipo_utilizador, id_carteira) VALUES (?, ?, ?, ?)";
+$sql_insert_user = "INSERT INTO utilizador (password, nome_utilizador, tipo_utilizador, id_carteira) 
+                    VALUES (?, ?, ?, ?)";
 
+// Preparar a query para inserir o novo utilizador
 $stmt_insert = $conn->prepare($sql_insert_user);
+
+// Verifica se a preparação da query não foi bem sucedida
 if ($stmt_insert === false) {
     echo "Erro na preparação da query do utilizador: " . $conn->error;
     $conn->rollback();
     $conn->close();
     exit();
 }
+// Faz o bind das variáveis à query
 $stmt_insert->bind_param("ssii", $pass_hashed, $user, $tipo, $new_id_carteira);
 
+// Executa a query para inserir o novo utilizador
 if ($stmt_insert->execute()) {
     $conn->commit();
     echo "Registo efetuado com sucesso! Redirecionando...";
@@ -94,6 +114,8 @@ if ($stmt_insert->execute()) {
     echo "Erro ao registar utilizador: " . $stmt_insert->error;
     header("refresh:5; url=registo.php");
 }
+
+// Fecha o statement de inserção e a conexão
 $stmt_insert->close();
 $conn->close();
 ?>

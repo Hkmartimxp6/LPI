@@ -223,5 +223,4 @@ if (isset($_SESSION["utilizador"]) && is_array($_SESSION["utilizador"])) {
         }
     </script>
 </body>
-
 </html>

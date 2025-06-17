@@ -185,15 +185,12 @@ $resultado = $stmt->get_result();
             background-color: #218838;
             border-color: #1e7e34;
         }
-
-        /* Novos estilos para a ordenação */
         .sort-options {
             margin-bottom: 20px;
             display: flex;
             gap: 15px;
             align-items: center;
             flex-wrap: wrap;
-            /* Permite que os botões quebrem a linha em telas pequenas */
         }
 
         .sort-options a {
@@ -248,6 +245,7 @@ $resultado = $stmt->get_result();
                                     <li><img src="1.png" alt="#" /> Alameda Cardeal Cerejeira</li>
                                     <li><img src="2.png" alt="#" /> +351 963 961 984</li>
                                     <li><img src="3.png" alt="#" /> felixbus@gmail.com</li>
+                                    <!-- Verifica se o utilizador está autenticado -->
                                     <?php if ($autenticado): ?>
                                         <li>
                                             <a href="javascript:void(0);" onclick="toggleSidebar()" title="Perfil">
@@ -306,13 +304,15 @@ $resultado = $stmt->get_result();
                     <div class="col-md-5">
                         <div class="form-group">
                             <label for="origem">Origem:</label>
-                            <input type="text" class="form-control" id="origem" name="origem" value="<?php echo htmlspecialchars($filtro_origem); ?>" placeholder="Ex: Lisboa">
+                            <input type="text" class="form-control" id="origem" name="origem" 
+                                   value="<?php echo htmlspecialchars($filtro_origem); ?>" placeholder="Ex: Lisboa">
                         </div>
                     </div>
                     <div class="col-md-5">
                         <div class="form-group">
                             <label for="destino">Destino:</label>
-                            <input type="text" class="form-control" id="destino" name="destino" value="<?php echo htmlspecialchars($filtro_destino); ?>" placeholder="Ex: Porto">
+                            <input type="text" class="form-control" id="destino" name="destino" 
+                                   value="<?php echo htmlspecialchars($filtro_destino); ?>" placeholder="Ex: Porto">
                         </div>
                     </div>
                     <div class="col-md-2 d-flex align-items-end">
@@ -354,11 +354,19 @@ $resultado = $stmt->get_result();
             $classe_destino = ($ordenar_por == 'destino') ? 'active' : '';
 
             // Ícones de direção (opcional, para feedback visual)
-            $icone_origem = ($ordenar_por == 'origem' && $direcao_ordenacao == 'ASC') ? ' &#9650;' : (($ordenar_por == 'origem' && $direcao_ordenacao == 'DESC') ? ' &#9660;' : '');
-            $icone_destino = ($ordenar_por == 'destino' && $direcao_ordenacao == 'ASC') ? ' &#9650;' : (($ordenar_por == 'destino' && $direcao_ordenacao == 'DESC') ? ' &#9660;' : '');
+            $icone_origem = ($ordenar_por == 'origem' && $direcao_ordenacao == 'ASC') ? 
+                            ' &#9650;' : (($ordenar_por == 'origem' && $direcao_ordenacao == 'DESC') ? ' &#9660;' : '');
+
+            $icone_destino = ($ordenar_por == 'destino' && $direcao_ordenacao == 'ASC') ? 
+                             ' &#9650;' : (($ordenar_por == 'destino' && $direcao_ordenacao == 'DESC') ? ' &#9660;' : '');
             ?>
-            <a href="<?php echo obterUrlOrdenacaoRotas('origem', $ordenar_por, $direcao_ordenacao, $filtro_origem, $filtro_destino); ?>" class="<?php echo $classe_origem; ?>">Origem<?php echo $icone_origem; ?></a>
-            <a href="<?php echo obterUrlOrdenacaoRotas('destino', $ordenar_por, $direcao_ordenacao, $filtro_origem, $filtro_destino); ?>" class="<?php echo $classe_destino; ?>">Destino<?php echo $icone_destino; ?></a>
+            <a href="<?php echo obterUrlOrdenacaoRotas('origem', $ordenar_por, $direcao_ordenacao, $filtro_origem, $filtro_destino); ?>" 
+                class="<?php echo $classe_origem; ?>">Origem<?php echo $icone_origem; ?>
+            </a>
+
+            <a href="<?php echo obterUrlOrdenacaoRotas('destino', $ordenar_por, $direcao_ordenacao, $filtro_origem, $filtro_destino); ?>" 
+                class="<?php echo $classe_destino; ?>">Destino<?php echo $icone_destino; ?>
+            </a>
         </div>
 
 
@@ -376,7 +384,9 @@ $resultado = $stmt->get_result();
                 echo "<span><strong>Destino:</strong> " . htmlspecialchars($linha["destino"]) . "</span>";
                 echo "</div>";
                 echo "<div>";
-                echo "<a href='viagens.php?origem=" . urlencode($linha["origem"]) . "&destino=" . urlencode($linha["destino"]) . "' class='procurar-btn'>Procurar Viagens</a>";
+                echo "<a href='viagens.php?origem=" . urlencode($linha["origem"]) 
+                                                    . "&destino=" . urlencode($linha["destino"]) 
+                                                    . "' class='procurar-btn'>Procurar Viagens</a>";
                 echo "</div>";
                 echo "</div>";
             }
@@ -397,26 +407,6 @@ $resultado = $stmt->get_result();
     <script src="custom.js"></script>
     <script src="owl.carousel.js"></script>
     <script>
-        $(document).ready(function() {
-            var owl = $('.owl-carousel');
-            owl.owlCarousel({
-                margin: 10,
-                nav: true,
-                loop: true,
-                responsive: {
-                    0: {
-                        items: 1
-                    },
-                    600: {
-                        items: 2
-                    },
-                    1000: {
-                        items: 3
-                    }
-                }
-            })
-        })
-
         function toggleSidebar() {
             const sidebar = document.getElementById("sidebarUser");
             sidebar.classList.toggle("active");

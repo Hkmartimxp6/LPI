@@ -197,6 +197,7 @@ $resultado = $stmt->get_result();
                                     <li><img src="1.png" alt="#" /> Alameda Cardeal Cerejeira</li>
                                     <li><img src="2.png" alt="#" /> +351 963 961 984</li>
                                     <li><img src="3.png" alt="#" /> felixbus@gmail.com</li>
+                                    <!-- Verifica se o utilizador está logado -->
                                     <?php if ($loggedIn): ?>
                                         <li>
                                             <a href="javascript:void(0);" onclick="toggleSidebar()" title="Perfil">
