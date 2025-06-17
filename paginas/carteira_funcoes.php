@@ -79,7 +79,9 @@ function adicionarSaldo(mysqli $conn, int $id_carteira, float $valor, int $id_op
         // Commit da transação
         $conn->commit();
         // Retorna uma mensagem de sucesso com o novo saldo formatado
-        return ['success' => true, 'message' => "Depósito de " . number_format($valor, 2, ',', '.') . "€ realizado com sucesso! Novo saldo: " . number_format($novo_saldo, 2, ',', '.') . "€"];
+        return ['success' => true, 
+                'message' => "Depósito de " . number_format($valor, 2, ',', '.') 
+                . "€ realizado com sucesso! Novo saldo: " . number_format($novo_saldo, 2, ',', '.') . "€"];
     } catch (Exception $e) {
         // Se ocorrer um erro, desfaz a transação
         $conn->rollback();
@@ -128,7 +130,8 @@ function retirarSaldo(mysqli $conn, int $id_carteira, float $valor, int $id_oper
 
         // Verificar se há saldo suficiente para o levantamento
         if ($saldo_anterior < $valor) {
-            throw new Exception("Saldo insuficiente para realizar o levantamento. Saldo atual: " . number_format($saldo_anterior, 2, ',', '.') . "€");
+            throw new Exception("Saldo insuficiente para realizar a operação. Saldo atual: "
+                . number_format($saldo_anterior, 2, ',', '.') . "€");
         }
 
         // Calcular o novo saldo após o levantamento
@@ -168,7 +171,9 @@ function retirarSaldo(mysqli $conn, int $id_carteira, float $valor, int $id_oper
         // Commit da transação
         $conn->commit();
         // Retorna uma mensagem de sucesso com o novo saldo formatado
-        return ['success' => true, 'message' => "Levantamento de " . number_format($valor, 2, ',', '.') . "€ realizado com sucesso! Novo saldo: " . number_format($novo_saldo, 2, ',', '.') . "€"];
+        return ['success' => true, 
+                'message' => "Levantamento de " . number_format($valor, 2, ',', '.') 
+                . "€ realizado com sucesso! Novo saldo: " . number_format($novo_saldo, 2, ',', '.') . "€"];
     } catch (Exception $e) {
         // Se ocorrer um erro, desfaz a transação
         $conn->rollback();

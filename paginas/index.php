@@ -47,7 +47,7 @@ if (isset($_SESSION["utilizador"]) && is_array($_SESSION["utilizador"])) {
             <button onclick="toggleSidebar()" class="close-btn">×</button>
         </div>
         <ul class="sidebar-menu">
-            <li><a href="pagina_utilizador.php">Perfil</a></li>
+            <li><a href="pagina_utilizador.php">Menu do utilizador</a></li>
             <li><a href="carteira.php">Carteira</a></li>
             <li><a href="logout.php">Logout</a></li>
         </ul>

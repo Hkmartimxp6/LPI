@@ -6,17 +6,18 @@ include "utilizadores.php";
 // Iniciar a sessão PHP
 session_start();
 
-// Variável para verificar se o utilizador está logado
-$loggedIn = false;
-
 // Se o utilizador está com sessão iniciada, então está logado
-if (!isset($_SESSION["utilizador"])) {
+if (!isset($_SESSION["utilizador"]) || ($_SESSION["utilizador"]["tipo_utilizador"] != CLIENTE)) {
+    
+    // Se o utilizador for funcionário ou administrador, redireciona para a página de gestão de viagens
+    if ($_SESSION["utilizador"]["tipo_utilizador"] == FUNCIONARIO
+        || $_SESSION["utilizador"]["tipo_utilizador"] == ADMINISTRADOR) {
+        header("Location: comprar_bilhetes_funcionario.php");
+        exit();
+    }
     header("Location: index.php");
     exit();
 }
-
-// Se a sessão do utilizador está definida, então o utilizador está logado
-$loggedIn = true;
 
 // Inicializar variáveis de filtro a partir dos parâmetros GET
 $filtro_origem = $_GET['origem'] ?? '';
@@ -133,23 +134,18 @@ $resultado = $stmt->get_result();
         .viagem-info {
             display: flex;
             flex-direction: row;
-            /* Alterado para row para exibição horizontal */
             align-items: center;
-            /* Alinha os itens verticalmente ao centro */
             gap: 20px;
-            /* Espaço entre os itens de informação */
         }
 
         .viagem-info span {
             margin: 0;
-            /* Remove margem vertical dos spans individuais */
         }
 
         .viagem-horas {
             font-weight: bold;
             font-size: 18px;
             margin-right: 100px;
-            /* Espaço entre horas e outras infos */
         }
 
         .viagem-preco {
@@ -264,7 +260,7 @@ $resultado = $stmt->get_result();
                 $hora_partida_formatada = (new DateTime($linha["hora"]))->format("H:i");
                 // Formatação da hora de chegada diretamente do banco de dados
                 $hora_chegada_formatada = (new DateTime($linha["hora_chegada"]))->format("H:i");
-                ?>
+        ?>
                 <div class="viagem-card">
                     <div class="viagem-info">
                         <div class="viagem-horas"><?= $hora_partida_formatada ?> → <?= $hora_chegada_formatada ?></div>
@@ -277,7 +273,7 @@ $resultado = $stmt->get_result();
                         <a href="comprar_bilhete.php?id_viagem=<?= $id_viagem ?>" class="continuar-btn">Continuar</a>
                     </div>
                 </div>
-                <?php
+        <?php
             }
         } else {
             // Se não houver resultados, exibe uma mensagem

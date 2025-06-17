@@ -59,6 +59,8 @@ switch ($row["tipo_utilizador"]) {
     case ADMINISTRADOR: // 1
         printGestaoAlertas();
         printDadosPessoais();
+        printGestaoBilhetes();
+        printCompraBilhetesParaCliente(); 
         printGestaoUtilizadores();
         printGestaoRotas(); 
         printGestaoCarteiras();
@@ -92,8 +94,8 @@ function printGestaoBilhetes()
 {
     // Botão para gestão de bilhetes
     echo "<div class='botaoCorpo'>
-            <form action='gestao_bilhetes.php'>
-                <input type='submit' value='Gestão Bilhetes' id='btCorpo'>
+            <form action='gestao_bilhetes_funcionario.php'>
+                <input type='submit' value='Gestão de Bilhetes de Clientes' id='btCorpo'>
             </form>
           </div>";
 }
@@ -123,7 +125,7 @@ function printGestaoCarteiraPessoal()
     // Botão para gestão da carteira pessoal
     echo "<div class='botaoCorpo'>
             <form action='carteira.php'>
-                <input type='submit' value='Gestão Carteira Pessoal' id='btCorpo'>
+                <input type='submit' value='Gestão Carteira' id='btCorpo'>
             </form>
           </div>";
 }

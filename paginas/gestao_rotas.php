@@ -72,17 +72,21 @@ if (isset($_POST['criar'])) {
 // Atualizar rota
 // Verificar se o formulário de atualização de rota foi submetido
 if (isset($_POST['atualizar'])) {
-    // Obter os dados do formulário
     $id_rota = $_POST['id_rota'];
     $origem = $_POST['origem'];
     $destino = $_POST['destino'];
-    // Preparar a consulta para atualizar a rota
-    $stmt = $conn->prepare("UPDATE rota SET id_origem = ?, id_destino = ? WHERE id_rota = ?");
-    // Fazer o bind dos parâmetros
-    $stmt->bind_param("iii", $origem, $destino, $id_rota);
-    // Executar a consulta
-    $stmt->execute();
+
+    // Verificar se a origem e o destino são diferentes
+    if ($origem == $destino) {
+        echo "<p style='color:red;'>Erro: A origem e o destino não podem ser iguais na atualização.</p>";
+    } else {
+        $stmt = $conn->prepare("UPDATE rota SET id_origem = ?, id_destino = ? WHERE id_rota = ?");
+        $stmt->bind_param("iii", $origem, $destino, $id_rota);
+        $stmt->execute();
+        echo "<p style='color:green;'>Rota atualizada com sucesso.</p>";
+    }
 }
+
 
 // Anular rota (estado = 0)
 // Verificar se o formulário de anulação de rota foi submetido
