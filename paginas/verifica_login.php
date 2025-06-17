@@ -13,7 +13,6 @@ if (!isset($_POST['utilizador']) || !isset($_POST['password'])) {
 // Associaçao de variáveis aos dados do formulário
 $user = $_POST["utilizador"];
 $pass = md5($_POST["password"]);
-$nao_valido = CLIENTE_NAO_VALIDO;
 
 // Prepara a consulta para evitar SQL Injection
 $stmt = $conn->prepare("SELECT * FROM utilizador WHERE nome_utilizador = ? AND password = ?");
@@ -30,7 +29,7 @@ if ($result->num_rows === 1) {
     $user_info = $result->fetch_assoc();
 
     // Verifica se o tipo de utilizador é válido
-    if ($user_info['tipo_utilizador'] != $nao_valido) {
+    if ($user_info['tipo_utilizador'] != CLIENTE_NAO_VALIDO && $user_info['tipo_utilizador'] != CLIENTE_APAGADO) {
         $_SESSION["utilizador"] = $user_info;
         echo "Login efetuado com sucesso, vai ser redirecionado para a página inicial...";
         header("refresh:2; url=index.php");
