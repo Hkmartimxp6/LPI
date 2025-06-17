@@ -217,26 +217,6 @@ if (isset($_SESSION["utilizador"]) && is_array($_SESSION["utilizador"])) {
     <script src="custom.js"></script>
     <script src="owl.carousel.js"></script>
     <script>
-        $(document).ready(function() {
-            var owl = $('.owl-carousel');
-            owl.owlCarousel({
-                margin: 10,
-                nav: true,
-                loop: true,
-                responsive: {
-                    0: {
-                        items: 1
-                    },
-                    600: {
-                        items: 2
-                    },
-                    1000: {
-                        items: 3
-                    }
-                }
-            })
-        })
-
         function toggleSidebar() {
             const sidebar = document.getElementById("sidebarUser");
             sidebar.classList.toggle("active");

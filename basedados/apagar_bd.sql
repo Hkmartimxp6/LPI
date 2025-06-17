@@ -1,0 +1,22 @@
+USE `felixbus`;
+
+SET FOREIGN_KEY_CHECKS = 0;
+
+DROP TABLE IF EXISTS `alerta_utilizador`;
+DROP TABLE IF EXISTS `bilhete`;
+DROP TABLE IF EXISTS `carteira_log`;
+DROP TABLE IF EXISTS `viagem`;
+DROP TABLE IF EXISTS `utilizador`;
+DROP TABLE IF EXISTS `rota`;
+
+DROP TABLE IF EXISTS `alerta`;
+DROP TABLE IF EXISTS `autocarro`;
+DROP TABLE IF EXISTS `operacao`;
+DROP TABLE IF EXISTS `tipo_utilizador`;
+DROP TABLE IF EXISTS `localidade`;
+DROP TABLE IF EXISTS `carteira`;
+
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+DROP DATABASE IF EXISTS `felixbus`;

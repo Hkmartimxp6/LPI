@@ -5,7 +5,7 @@ include "../basedados/basedados.h";
 include "utilizadores.php";
 include "carteira_funcoes.php";
 
-// Verificar se o utilizador é FUNCIONARIO ou ADMINISTRADOR
+// Verifica se o utilizador é FUNCIONARIO ou ADMINISTRADOR
 if (!isset($_SESSION['utilizador']) ||
     ($_SESSION['utilizador']['tipo_utilizador'] != FUNCIONARIO && 
      $_SESSION['utilizador']['tipo_utilizador'] != ADMINISTRADOR)) {
@@ -15,12 +15,13 @@ if (!isset($_SESSION['utilizador']) ||
 
 // Mensagens de feedback
 $mensagem = "";
+// Variável para indicar se ocorreu um erro
 $erro = false;
 
 // Obter lista de clientes (tipo 3 = cliente)
 $resultado_clientes = $conn->query("SELECT id_utilizador, nome_utilizador FROM utilizador WHERE tipo_utilizador = 3");
 
-// Obter rotas
+// Resultado da query para obter rotas
 $resultado_rotas = $conn->query("
     SELECT r.id_rota, l1.localidade AS origem, l2.localidade AS destino
     FROM rota r
@@ -30,9 +31,12 @@ $resultado_rotas = $conn->query("
 
 // Verifica se foi selecionada uma rota
 $id_rota = isset($_GET['rota']) ? (int)$_GET['rota'] : null;
+// resultado das viagens para a rota selecionada
 $resultado_viagens = null;
 
+// Se uma rota foi selecionada, obter as viagens associadas com uma query preparada
 if ($id_rota) {
+    // Prepara a query para obter as viagens da rota selecionada
     $stmt_viagens = $conn->prepare("
         SELECT v.id_viagem, v.data, v.hora, l1.localidade AS origem, l2.localidade AS destino, v.preco
         FROM viagem v
@@ -42,22 +46,33 @@ if ($id_rota) {
         WHERE v.id_rota = ?
         ORDER BY v.data ASC
     ");
+    // Faz o bind do parâmetro da rota
     $stmt_viagens->bind_param("i", $id_rota);
+    // Executa a query
     $stmt_viagens->execute();
+    // Obtém o resultado
     $resultado_viagens = $stmt_viagens->get_result();
 }
 
 // Processamento da compra
+// Verifica se o formulário foi submetido e se os campos necessários estão preenchidos
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cliente']) && isset($_POST['viagem'])) {
+    // Verifica se o ID do cliente e da viagem foram enviados
     $id_cliente = $_POST['cliente'];
     $id_viagem = $_POST['viagem'];
 
+    // Obtém o id_carteira do cliente
     $stmt = $conn->prepare("SELECT id_carteira FROM utilizador WHERE id_utilizador = ?");
+    // Faz o bind do parâmetro do ID do cliente
     $stmt->bind_param("i", $id_cliente);
+    // Executa a query
     $stmt->execute();
+    // Obtém o resultado
     $res = $stmt->get_result();
 
+    // Verifica se o cliente foi encontrado com o numero de linhas retornadas
     if ($res->num_rows === 0) {
+        
         $erro = true;
         $mensagem = "Cliente não encontrado.";
     } else {
