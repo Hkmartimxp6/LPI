@@ -31,13 +31,13 @@ if ($result->num_rows === 1) {
 
     // Verifica se o tipo de utilizador é válido
     if ($user_info['tipo_utilizador'] != $nao_valido) {
-        $_SESSION["utilizador"] = $user_info; // ✅ guarda o array completo
+        $_SESSION["utilizador"] = $user_info;
         echo "Login efetuado com sucesso, vai ser redirecionado para a página inicial...";
         header("refresh:2; url=index.php");
         exit();
     } else {
-        echo "Utilizador não validado, vai ser redirecionado para a página de login...";
-        header("refresh:2; url=login.php");
+        echo "Utilizador não validado, vai ser redirecionado para a página inicial...";
+        header("refresh:2; url=index.php");
         exit();
     }
 } else {

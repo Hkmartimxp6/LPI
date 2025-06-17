@@ -13,7 +13,7 @@ if (!isset($_GET['id_viagem'])) {
 
 // Redireciona se o utilizador não estiver logado
 if (!isset($_SESSION["utilizador"])) {
-    header("Location: index.php?mensagem=É necessário iniciar sessão para comprar bilhetes.");
+    header("Location: index.php");
     exit();
 }
 
@@ -173,10 +173,8 @@ $saldo_atual = $res->fetch_assoc()["saldo"] ?? 0;
 // Fechar a conexão com a base de dados
 $conn->close();
 ?>
-
 <!DOCTYPE html>
 <html lang="pt">
-
 <head>
     <meta charset="UTF-8">
     <title>Confirmar Bilhete</title>
@@ -204,7 +202,6 @@ $conn->close();
         }
     </style>
 </head>
-
 <body class="main-layout">
     <div class="container">
         <h1>Confirmação da Viagem</h1>

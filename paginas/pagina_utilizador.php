@@ -57,27 +57,27 @@ echo "<div id='cabecalho'>
 echo "<div id='corpo'>";
 switch ($row["tipo_utilizador"]) {
     case ADMINISTRADOR: // 1
-        printGestaoAlertas();
-        printDadosPessoais();
-        printGestaoBilhetes();
         printCompraBilhetesParaCliente(); 
+        printGestaoAlertas();
+        printGestaoBilhetes();
+        printGestaoCarteiraPessoal();
+        printGestaoCarteiras();
+        printDadosPessoais();
         printGestaoUtilizadores();
         printGestaoRotas(); 
-        printGestaoCarteiras();
         break;
 
     case FUNCIONARIO: // 2
-        printDadosPessoais();
-        printGestaoCarteiraPessoal();
-        printGestaoBilhetes();
         printCompraBilhetesParaCliente(); 
-        printGestaoCarteiras(); 
+        printDadosPessoais();
+        printGestaoBilhetes();
+        printGestaoCarteiras();
         break;
 
     case CLIENTE: // 3
-        printGestaoBilhetes();
-        printGestaoCarteiraPessoal();
         printDadosPessoais(); 
+        printGestaoBilhetesDosClientes();
+        printGestaoCarteiraPessoal();
         break;
 }
 echo "</div>";
@@ -96,6 +96,16 @@ function printGestaoBilhetes()
     echo "<div class='botaoCorpo'>
             <form action='gestao_bilhetes_funcionario.php'>
                 <input type='submit' value='Gestão de Bilhetes de Clientes' id='btCorpo'>
+            </form>
+          </div>";
+}
+
+function printGestaoBilhetesDosClientes()
+{
+    // Botão para gestão de bilhetes
+    echo "<div class='botaoCorpo'>
+            <form action='gestao_bilhetes.php'>
+                <input type='submit' value='Gestão de Bilhetes' id='btCorpo'>
             </form>
           </div>";
 }
@@ -169,3 +179,4 @@ function printGestaoAlertas()
             </form>
           </div>";
 }
+?>

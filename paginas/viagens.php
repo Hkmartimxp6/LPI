@@ -6,19 +6,18 @@ include "utilizadores.php";
 // Iniciar a sessão PHP
 session_start();
 
-// Se o utilizador está com sessão iniciada, então está logado
-if (!isset($_SESSION["utilizador"]) || ($_SESSION["utilizador"]["tipo_utilizador"] != CLIENTE)) {
-    
-    // Se o utilizador for funcionário ou administrador, redireciona para a página de gestão de viagens
-    if ($_SESSION["utilizador"]["tipo_utilizador"] == FUNCIONARIO
-        || $_SESSION["utilizador"]["tipo_utilizador"] == ADMINISTRADOR) {
+$loggedIn = isset($_SESSION["utilizador"]);
+
+// Se o utilizador for funcionário ou administrador, redireciona para a página de gestão de viagens
+if (isset($_SESSION["utilizador"])) {
+    if (
+        $_SESSION["utilizador"]["tipo_utilizador"] == FUNCIONARIO
+        || $_SESSION["utilizador"]["tipo_utilizador"] == ADMINISTRADOR
+    ) {
         header("Location: comprar_bilhetes_funcionario.php");
         exit();
     }
-    header("Location: index.php");
-    exit();
 }
-
 // Inicializar variáveis de filtro a partir dos parâmetros GET
 $filtro_origem = $_GET['origem'] ?? '';
 $filtro_destino = $_GET['destino'] ?? '';
@@ -318,5 +317,4 @@ $resultado = $stmt->get_result();
         }
     </script>
 </body>
-
 </html>

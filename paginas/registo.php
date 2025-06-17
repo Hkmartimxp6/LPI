@@ -46,29 +46,9 @@
                                         <img src="logo.png" class="img-fluid" style="width: 185px;" alt="logo">
                                     </div>
                                     <form action="criar_registo.php" method="post">
-                                        <label class="form-label" for="nome">Nome</label>
-                                        <div class="form-outline mb-4">
-                                            <input type="text" id="nome" class="form-control" placeholder="O seu nome" name="nome" required />
-                                        </div>
-
-                                        <label class="form-label" for="morada">Morada</label>
-                                        <div class="form-outline mb-4">
-                                            <input type="text" id="morada" class="form-control" placeholder="A sua morada" name="morada" required />
-                                        </div>
-
-                                        <label class="form-label" for="telemovel">Telemóvel</label>
-                                        <div class="form-outline mb-4">
-                                            <input type="tel" id="telemovel" class="form-control" placeholder="O seu número de telemóvel" name="telemovel" required />
-                                        </div>
-
                                         <label class="form-label" for="utilizador_registo">Utilizador</label>
                                         <div class="form-outline mb-4">
                                             <input type="text" id="utilizador_registo" class="form-control" placeholder="O seu nome de utilizador" name="utilizador_registo" required />
-                                        </div>
-
-                                        <label class="form-label" for="email_registo">Email</label>
-                                        <div class="form-outline mb-4">
-                                            <input type="email" id="email_registo" class="form-control" placeholder="O seu email" name="email_registo" required />
                                         </div>
 
                                         <label class="form-label" for="password_registo">Password</label>
@@ -76,7 +56,7 @@
                                             <input type="password" id="password_registo" class="form-control" placeholder="A sua password" name="password_registo" required />
                                         </div>
 
-                                        <label class="form-label" for="confirmar_password">Repita a Password</label>
+                                        <label class="form-label" for="confirmar_password">Confirmar a Password</label>
                                         <div class="form-outline mb-4">
                                             <input type="password" id="confirmar_password" class="form-control" placeholder="A sua password" name="confirmar_password" required />
                                         </div>
